@@ -1,0 +1,400 @@
+@font-face {
+  font-family: "Andika";
+  src: url("./AndikaNewBasic-Custom-R.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Andika";
+  src: url("./AndikaNewBasic-Custom-B.ttf") format("truetype");
+  font-weight: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Andika";
+  src: url("./AndikaNewBasic-Custom-I.ttf") format("truetype");
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Andika";
+  src: url("./AndikaNewBasic-Custom-BI.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  font-family: "Andika", sans-serif;
+  overflow: auto;
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+.andika {
+  font-family: "Andika", sans-serif;
+}
+
+header,
+nav,
+footer,
+main,
+div.inter {
+  padding: 8px 12px;
+  scroll-behavior: smooth;
+}
+
+main {
+  flex: 1;
+  padding: 0;
+}
+
+main,
+.bp5-portal {
+  font-size: 18px;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  transition: all 180ms;
+}
+
+.bp5-dark h1 a,
+.bp5-dark h1 a:visited,
+.bp5-dark h1 a:active,
+.bp5-dark h1 a:hover {
+  text-decoration: none;
+  color: #f6f7f9;
+}
+
+#usertext,
+#usertext:visited {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 24px;
+  display: flex;
+}
+
+body.bp5-dark {
+  background-color: #252a31;
+}
+
+header,
+footer {
+  background-color: #452798;
+}
+
+header {
+  padding-top: 4px;
+  position: sticky;
+  top: 0;
+  /* not sure why this is needed */
+  z-index: 1;
+}
+
+footer {
+  position: sticky;
+  bottom: 0;
+}
+
+header h1.bp5-heading,
+header h2.bp5-heading,
+header h3.bp5-heading {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 1rem;
+}
+
+header .menu {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+header .bp5-divider {
+  display: inline-block;
+  height: 2rem;
+  margin-top: -0.5rem;
+  margin-bottom: -0.5rem;
+  margin-right: 1rem;
+}
+
+.sc {
+  font-variant-caps: small-caps;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.margin-auto {
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.bp5-callout.bp5-compact.edit-section {
+  width: fit-content;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bp5-dark .bp5-callout.bp5-intent-primary:not(.bp5-minimal).edit-section {
+  background-color: rgba(45, 114, 210, 0.08);
+  border: 1px solid rgba(45, 114, 210);
+}
+
+/* fix weird behaviour */
+.bp5-non-ideal-state > .bp5-fill.bp5-button-group {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+table.bp5-html-table.bp5-compact.dictionary th,
+table.bp5-html-table.bp5-compact.dictionary td {
+  padding-bottom: 4px;
+  padding-top: 4px;
+  vertical-align: middle;
+}
+
+table.bp5-html-table.bp5-compact.dictionary td.dual * {
+  margin: auto;
+}
+
+table.bp5-html-table.bp5-compact.inflection p {
+  margin-bottom: 0;
+}
+
+.hl {
+  font-weight: bold;
+}
+
+.rb {
+  border-right: 3px solid;
+}
+
+.db {
+  border-bottom: 3px solid;
+}
+
+table.bp5-html-table.bp5-compact.inflection .rb {
+  text-align: right;
+}
+
+footer p {
+  display: inline-block;
+  padding-right: 0.6rem;
+  margin: 0;
+}
+
+.fill-height {
+  height: 100%;
+}
+
+.fit-width {
+  width: fit-content;
+}
+
+.space-right {
+  margin-right: 1rem;
+  display: inline;
+}
+
+.word {
+  display: grid;
+  grid-template-columns: min-content auto;
+  column-gap: 12px;
+}
+
+.word nav {
+  border: 1px solid #aaa;
+  padding: 2px 15px 7px;
+  height: fit-content;
+  display: table;
+  position: sticky;
+  top: 8px;
+}
+
+.word nav ol {
+  padding-left: 20px;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .word {
+    display: grid;
+    grid-template-columns: auto;
+  }
+
+  .word nav {
+    display: none;
+  }
+}
+
+.word h3.bp5-heading.meaning,
+.word h4.bp5-heading {
+  scroll-margin-top: 1em;
+  margin-top: 1rem;
+}
+
+abbr {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .bottom {
+  margin-top: auto;
+}
+
+h1 .bp5-icon,
+h2 .bp5-icon,
+h3 .bp5-icon,
+h4 .bp5-icon {
+  vertical-align: bottom;
+}
+
+.dictionary tr td .bp5-icon {
+  vertical-align: bottom;
+  margin-left: 0.3rem;
+}
+
+.bp5-dark .dictionary td:has(> a.link-fill) {
+  padding: 0;
+  min-height: 34px;
+}
+
+@media (max-width: 690px) {
+  .dictionary td a.link-fill {
+    min-height: 34px;
+  }
+}
+
+@media (max-width: 520px) {
+  .dictionary .pronunciation {
+    display: none;
+  }
+}
+
+.bp5-dark .dictionary a.link-fill {
+  color: inherit;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 4px 11px;
+  align-items: center;
+}
+
+.bp5-dark .dictionary a.link-fill:hover {
+  text-decoration: none;
+}
+
+.around-dictionary {
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
+  position: sticky;
+  background-color: #252a31;
+}
+
+.bp5-dark a.missing {
+  color: #ff4242;
+}
+
+.bp5-dark a.missing:hover {
+  color: #ef8174;
+}
+
+.bp5-dark a.missing:active {
+  color: #f8a397;
+}
+
+.bp5-form-group.compact {
+  margin-bottom: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-areas:
+    "nh nh d1 vh vh d2 gh"
+    "nl nr d1 vl vr d2 gl";
+  grid-column-gap: 1rem;
+  grid-row-gap: 0px;
+  width: fit-content;
+}
+
+.stats .n-header {
+  grid-area: nh;
+  text-align: center;
+}
+.stats .n-left {
+  grid-area: nl;
+  height: fit-content;
+}
+.stats .n-right {
+  grid-area: nr;
+  height: fit-content;
+}
+.stats .divider-1 {
+  grid-area: d1;
+}
+.stats .v-header {
+  grid-area: vh;
+  text-align: center;
+}
+.stats .v-left {
+  grid-area: vl;
+  height: fit-content;
+}
+.stats .v-right {
+  grid-area: vr;
+  height: fit-content;
+}
+.stats .divider-2 {
+  grid-area: d2;
+}
+.stats .g-header {
+  grid-area: gh;
+  text-align: center;
+}
+.stats .g-left {
+  grid-area: gl;
+  height: fit-content;
+}
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.space-between .center {
+  margin: auto;
+}
+
+span.edit {
+  font-size: small;
+  font-style: normal;
+  font-weight: normal;
+  margin-left: 1rem;
+}
+
+.inter.middle {
+  width: fit-content;
+  margin: 0 auto;
+}

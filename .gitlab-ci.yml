@@ -1,0 +1,33 @@
+js react build:
+  image: node:latest
+  stage: build
+  script:
+    - npm install
+    - npm -v && node -v
+    - npm run build-prod
+    - cp -r build/ public/
+  artifacts:
+    paths:
+      - public/
+  cache:
+    policy: pull
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+
+pages:
+  stage: deploy
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - js react build
+  dependencies:
+    - js react build
+  script:
+    - cp -r -v static/* public/
+  artifacts:
+    paths:
+      - public
