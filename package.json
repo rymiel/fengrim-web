@@ -1,6 +1,6 @@
 {
-  "name": "elf-lang-web",
-  "version": "0.3.1",
+  "name": "fengrim-web",
+  "version": "0.4.0",
   "private": true,
   "description": "",
   "main": "index.js",
