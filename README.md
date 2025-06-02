@@ -1,6 +1,4 @@
-# Solerian website
+# Fengrim website
 
-Deployed at https://solerian.rymiel.space
+Deployed at https://fengrim.rymiel.space
 
-A rewrite of the old website (https://gitlab.com/rymiel/crystal-solerian) with most logic moved to the frontend and with
-better design.
