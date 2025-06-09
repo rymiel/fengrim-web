@@ -9,6 +9,7 @@ import DictionaryPage from "page/DictionaryPage";
 import EditWordPage from "page/EditWordPage";
 import GeneratePage from "page/GeneratePage";
 import NewWordPage from "page/NewWordPage";
+import ReversePage from "page/ReversePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import WordPage from "page/WordPage";
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
       {
         path: "/new",
         element: <NewWordPage />,
+      },
+      {
+        path: "/reverse",
+        element: <ReversePage />,
+      },
+      {
+        path: "/reverse/:query",
+        element: <ReversePage />,
       },
       {
         path: "/stats",
