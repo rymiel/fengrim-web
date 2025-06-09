@@ -4,6 +4,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { transformConfig } from "lang/config";
+import { transformDictionary } from "lang/dictionary";
 import ConfigPage from "page/ConfigPage";
 import DictionaryPage from "page/DictionaryPage";
 import EditWordPage from "page/EditWordPage";
@@ -13,7 +15,6 @@ import ReversePage from "page/ReversePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import WordPage from "page/WordPage";
-import { DataProvider } from "providers/data";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
 import { API } from "api";
@@ -89,11 +90,17 @@ const router = createBrowserRouter([
 function Wrapper() {
   return <StrictMode>
     <BlueprintProvider>
-      <DataProvider>
-        <ConlangProvider dictionary={Dictionary} lang={LangConfig} api={API} error={toastErrorHandler} tag="x-elf">
-          <RouterProvider router={router} />
-        </ConlangProvider>
-      </DataProvider>
+      <ConlangProvider
+        dictionary={Dictionary}
+        transformDictionary={transformDictionary}
+        config={LangConfig}
+        transformConfig={transformConfig}
+        api={API}
+        error={toastErrorHandler}
+        tag="x-elf"
+      >
+        <RouterProvider router={router} />
+      </ConlangProvider>
     </BlueprintProvider>
   </StrictMode>;
 }
