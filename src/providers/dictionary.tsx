@@ -3,10 +3,7 @@ import { createContext } from "react";
 
 import { Part } from "lang/extra";
 
-export interface SortableEntry extends Omit<ApiWord, "meanings" | "sections"> {
-  meanings: FullMeaning[];
-}
-export interface FullEntry extends SortableEntry {
+export interface FullEntry extends Omit<ApiWord, "meanings" | "sections"> {
   part: Part | null;
   ipa: string;
   link: string;
