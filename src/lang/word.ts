@@ -23,7 +23,7 @@ export function syllableToIPA(syll: Syllable) {
 }
 
 function regexGroup(s: readonly string[]): string {
-  return `(${s.join("|")})`;
+  return `(?:${s.join("|")})`;
 }
 
 export class SyllableInstance {
@@ -33,14 +33,19 @@ export class SyllableInstance {
   constructor(config: SyllableConfig) {
     this.#config = config;
 
-    const consg = regexGroup(this.#config.consonant);
     const initg = regexGroup([...this.#config.initial, ...this.#config.consonant]);
     const vg = regexGroup(this.#config.vowel);
     const toneg = regexGroup(this.#config.tones.flatMap((i) => [i[0], i[1]]));
     const tonelg = regexGroup(this.#config.tones.map((i) => i[1]));
+    const consg = regexGroup(this.#config.consonant);
     const fing = regexGroup(this.#config.final);
+    const contg = regexGroup(["$", ...this.#config.vowel, ...this.#config.consonant]);
 
-    this.#regex = new RegExp(`${initg}?${vg}${toneg}${vg}?${tonelg}?${fing}?(?=$|${consg})`, "g");
+    this.#regex = new RegExp(
+      `(${initg})?(${vg})(${toneg})(\\2)?(${tonelg})?((?=${consg}${vg})|${fing}|)'?(?=${contg})`,
+      "g",
+    );
+    console.log(this.#regex);
   }
 
   public unromanize(word: string) {
