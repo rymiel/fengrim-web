@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "sourceMap": true,
-        "module": "esnext",
-        "target": "es2021",
-        "jsx": "react-jsx",
-        "outDir": "build/",
-        "moduleResolution": "node10",
-        "baseUrl": "./src",
-        "plugins": [{ "name": "typescript-plugin-css-modules" }],
-        "noErrorTruncation": true
-    },
-    "include": [ "./src/**/*", "./test/**/*" ],
-    "exclude": [ "./build/**/*" ],
+  "compilerOptions": {
+    "strict": true,
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "es2021",
+    "jsx": "react-jsx",
+    "outDir": "build/",
+    "moduleResolution": "node10",
+    "baseUrl": "./src",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "noErrorTruncation": true
+  },
+  "include": ["./src/**/*", "./test/**/*"],
+  "exclude": ["./build/**/*"]
 }
