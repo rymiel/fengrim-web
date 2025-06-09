@@ -32,6 +32,7 @@ const SYLLABLE_CONFIG: SyllableConfig = {
     ["ph", "pʰ"],
     ["th", "tʰ"],
     ["kh", "kʰ"],
+    ["ngg", "ŋŋ"],
     ["ng", "ŋ"],
     ["tsh", "tsʰ"],
     ["tyh", "cʰ"],
