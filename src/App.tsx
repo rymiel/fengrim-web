@@ -1,5 +1,4 @@
 import {
-  Button,
   Classes,
   Divider,
   Drawer,
@@ -7,18 +6,16 @@ import {
   H1,
   H2,
   Icon,
-  InputGroup,
   Intent,
   OverlayToaster,
-  Popover,
   Position,
   Toaster,
 } from "@blueprintjs/core";
-import { ApiVersion, CustomApiError, Title, User } from "conlang-web-components";
+import { ApiVersion, CustomApiError, Login, Logout, Title, User } from "conlang-web-components";
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { Link, Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 
-import { API, LANGUAGE } from "api";
+import { LANGUAGE } from "api";
 
 let toasterCache: Promise<Toaster> | null = null;
 export const AppToaster = (): Promise<Toaster> => {
@@ -45,42 +42,6 @@ export const toastErrorHandler = async (error: unknown): Promise<string> => {
     return toaster.show({ intent: Intent.DANGER, message: `unknown error ${error}` });
   }
 };
-
-function Login() {
-  const [username, setUsername] = useState("");
-  const [secret, setSecret] = useState("");
-  const user = useContext(User);
-  const login = () => {
-    API.general("/login", "POST", { username, secret }).then(() => user.update());
-  };
-
-  return <Popover
-    interactionKind="click"
-    popoverClassName={Classes.POPOVER_CONTENT_SIZING}
-    content={
-      <div>
-        <InputGroup onValueChange={(v) => setUsername(v)} placeholder="Username" />
-        <InputGroup onValueChange={(v) => setSecret(v)} placeholder="Password" type="password" />
-        <Button fill intent="success" text="Log in" onClick={login} />
-      </div>
-    }
-    renderTarget={({ isOpen, ...targetProps }) => <a {...targetProps}>Not logged in.</a>}
-  />;
-}
-
-function Logout() {
-  const user = useContext(User);
-  const signout = () => {
-    API.general("/logout", "POST").then(() => user.update());
-  };
-
-  return <Popover
-    interactionKind="click"
-    popoverClassName={Classes.POPOVER_CONTENT_SIZING}
-    content={<Button intent={Intent.DANGER} text="Sign out" onClick={signout} />}
-    renderTarget={({ isOpen, ...targetProps }) => <a {...targetProps}>{user.user?.name}</a>}
-  />;
-}
 
 const MENU_LINKS = [
   ["/", "Home"],
