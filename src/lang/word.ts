@@ -57,7 +57,7 @@ export class SyllableInstance {
       const [, initial, v, tonem, vd, tonel, final] = m;
       const [, tone, toneipa] = this.#config.tones.find((letters) => letters.includes(tonem || tonel || ""))!;
       const vowel = this.#config.double.find(([k]) => k === vd)?.[1] ?? v;
-      return { initial: initial?.normalize("NFC"), vowel, final, tone, toneipa };
+      return { initial: initial?.normalize("NFC"), vowel, final: final === "" ? undefined : final, tone, toneipa };
     });
   }
 

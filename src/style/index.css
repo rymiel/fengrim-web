@@ -387,6 +387,17 @@ h4 .bp5-icon {
   margin: auto;
 }
 
+.general-stats {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.general-stats h4 {
+  text-align: center;
+}
+
 span.edit {
   font-size: small;
   font-style: normal;
