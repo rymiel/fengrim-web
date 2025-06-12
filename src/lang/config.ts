@@ -29,8 +29,8 @@ const SOUND_CHANGE_CONFIG: SoundChangeConfig = {
 
 const SYLLABLE_CONFIG: SyllableConfig = {
   consonant: [
-    ["dz", "ts"],
-    ["ts", "tsʰ"],
+    ["z", "ts"],
+    ["c", "tsʰ"],
     ["b", "p"],
     ["p", "pʰ"],
     ["d", "t"],
@@ -41,8 +41,8 @@ const SYLLABLE_CONFIG: SyllableConfig = {
     ["n", "n"],
     ["ŋ", "ŋ"],
     ["f", "f"],
-    ["z", "s"],
-    ["s", "sʰ"],
+    ["s", "s"],
+    ["x", "sʰ"],
     ["h", "h"],
     ["l", "l"],
     ["j", "j"],
