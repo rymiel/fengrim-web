@@ -66,11 +66,9 @@ const ReverseContent = memo(function ReverseContent({ entries, query }: { entrie
   const r = lookup(query);
 
   for (const affix of affixes) {
-    // console.log(query, end, s);
     if (affix.isSuffix && query.endsWith(affix.raw)) {
       const cut = query.slice(0, -affix.raw.length);
       const rc = lookup(cut, { only: affix.applies });
-      console.log(query, cut, affix, rc);
       if (rc.length > 0) {
         r.push(affixTreeNode(query, cut, affix, rc));
       }
