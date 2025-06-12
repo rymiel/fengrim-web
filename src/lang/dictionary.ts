@@ -15,7 +15,7 @@ export function transformDictionary(lang: LangConfigData, d: ApiDictionary): Ful
   const mWords = d.words
     .map((word) => {
       const part = partOfExtra(word.extra);
-      const ipa = lang.syllable.ipa(word.sol);
+      const ipa = lang.ipa(word.sol);
       const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
       const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
       return { ...word, part, ipa, sections, meanings };

@@ -105,24 +105,35 @@ function OldContent() {
   </div>;
 }
 
+const EMPTY = ["∅", "∅"];
+
+function seedTally(keys: readonly string[]): Record<string, number> {
+  const obj: Record<string, number> = {};
+  for (const k of keys) {
+    obj[k] = 0;
+  }
+  return obj;
+}
+
 function SyllableContent() {
   const { entries } = useContext(Dictionary);
   const config = useContext(LangConfig);
 
   if (!entries || !config) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
-  const initialTally: Record<string, number> = {};
-  const vowelTally: Record<string, number> = {};
-  const finalTally: Record<string, number> = {};
-  const toneTally: Record<string, number> = {};
+  const data = config.syllable.config;
+  const initialTally = seedTally([...data.initial, ...data.consonant].map((i) => i[1]));
+  const vowelTally = seedTally(data.vowel.map((i) => i[1]));
+  const finalTally = seedTally(data.final.map((i) => i[1]));
+  const toneTally = seedTally(data.tones.map((i) => i[1]));
 
   for (const entry of entries) {
     const sylls = config.syllable.syllabify(entry.sol);
     for (const syll of sylls) {
-      increment(initialTally, syll.initial ?? "∅");
-      increment(vowelTally, syll.vowel);
-      increment(finalTally, syll.final ?? "∅");
-      increment(toneTally, syll.tone);
+      increment(initialTally, (syll.initial ?? EMPTY)[1]);
+      increment(vowelTally, syll.vowel[1]);
+      increment(finalTally, (syll.final ?? EMPTY)[1]);
+      increment(toneTally, syll.tone[1]);
     }
   }
 

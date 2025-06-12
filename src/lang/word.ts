@@ -1,29 +1,35 @@
-import { gsub } from "conlang-web-components";
+type IPAMapping = readonly [roman: string, ipa: string];
+type Tone = readonly [diacritic: string, letter: string, ipa: string];
+
+const INVALID: IPAMapping = ["×", "×"];
 
 export interface SyllableConfig {
-  readonly unromanize: readonly (readonly [from: string, to: string])[];
-  readonly consonant: readonly string[];
-  readonly initial: readonly string[];
-  readonly vowel: readonly string[];
-  readonly final: readonly string[];
-  readonly tones: readonly (readonly [diacritic: string, letter: string, ipa: string])[];
-  readonly double: readonly (readonly [from: string, to: string])[];
+  readonly consonant: readonly IPAMapping[];
+  readonly initial: readonly IPAMapping[];
+  readonly vowel: readonly IPAMapping[];
+  readonly final: readonly IPAMapping[];
+  readonly tones: readonly Tone[];
 }
 
 export interface Syllable {
-  initial: string | undefined;
-  vowel: string;
-  final: string | undefined;
-  tone: string;
-  toneipa: string;
+  initial: IPAMapping | undefined;
+  vowel: IPAMapping;
+  final: IPAMapping | undefined;
+  tone: Tone;
 }
 
-export function syllableToIPA(syll: Syllable) {
-  return `${syll.initial ?? ""}${syll.vowel}${syll.final ?? ""}${syll.toneipa}`;
+function syllableToIPA(syll: Syllable) {
+  return `${syll.initial?.[1] ?? ""}${syll.vowel[1]}${syll.final?.[1] ?? ""}${syll.tone[2]}`;
 }
 
-function regexGroup(s: readonly string[]): string {
-  return `(?:${s.join("|")})`;
+function syllablesToIPA(sylls: Syllable[]) {
+  return sylls.map(syllableToIPA).join(".");
+}
+
+const ipaMappingRoman = (m: IPAMapping | string): string => (typeof m === "string" ? m : m[0]);
+
+function regexGroup(s: readonly (IPAMapping | string)[]): string {
+  return `(?:${s.map(ipaMappingRoman).join("|")})`;
 }
 
 export class SyllableInstance {
@@ -33,45 +39,54 @@ export class SyllableInstance {
   constructor(config: SyllableConfig) {
     this.#config = config;
 
-    const initg = regexGroup([...this.#config.initial, ...this.#config.consonant]);
-    const vg = regexGroup(this.#config.vowel);
-    const toneg = regexGroup(this.#config.tones.flatMap((i) => [i[0], i[1]]));
-    const tonelg = regexGroup(this.#config.tones.map((i) => i[1]));
-    const consg = regexGroup(this.#config.consonant);
-    const fing = regexGroup(this.#config.final);
-    const contg = regexGroup(["$", ...this.#config.vowel, ...this.#config.consonant]);
+    const init = regexGroup([...this.#config.initial, ...this.#config.consonant]);
+    const v = regexGroup(this.#config.vowel.filter((i) => i[0].length === 1));
+    const tone = regexGroup(this.#config.tones.flatMap((i) => [i[0], i[1]]));
+    const tonel = regexGroup(this.#config.tones.map((i) => i[1]));
+    const cons = regexGroup(this.#config.consonant);
+    const fin = regexGroup(this.#config.final);
+    const cont = regexGroup(["$", ...this.#config.vowel, ...this.#config.consonant]);
 
-    this.#regex = new RegExp(
-      `(${initg})?(${vg})(${toneg})(\\2)?(${tonelg})?((?=${consg}${vg})|${fing}|)'?(?=${contg})`,
-      "g",
-    );
+    this.#regex = new RegExp(`(${init})?(${v})(${tone})(\\2)?(${tonel})?((?=${cons}${v})|${fin}|)'?(?=${cont})`, "g");
     console.log(this.#regex);
   }
 
-  public unromanize(word: string) {
-    return gsub(word, this.#config.unromanize).normalize("NFD");
+  public mapIpaMapping(match: string | undefined, mapping: readonly IPAMapping[]): IPAMapping | undefined {
+    if (match === "" || match === undefined) return undefined;
+    return mapping.find(([r]) => r === match) ?? INVALID;
   }
 
   public syllabify(word: string): Syllable[] {
-    return [...this.unromanize(word).matchAll(this.#regex)].map((m) => {
+    const matches = [...word.normalize("NFD").matchAll(this.#regex)];
+    return matches.map((m) => {
       const [, initial, v, tonem, vd, tonel, final] = m;
-      const [, tone, toneipa] = this.#config.tones.find((letters) => letters.includes(tonem || tonel || ""))!;
-      const vowel = this.#config.double.find(([k]) => k === vd)?.[1] ?? v;
-      return { initial: initial?.normalize("NFC"), vowel, final: final === "" ? undefined : final, tone, toneipa };
+      const tone = this.#config.tones.find((letters) => letters.includes(tonem || tonel || ""))!;
+      const vowel = v + (vd ?? "");
+      return {
+        initial: this.mapIpaMapping(initial, [...this.#config.initial, ...this.#config.consonant]),
+        vowel: this.mapIpaMapping(vowel, this.#config.vowel)!,
+        final: this.mapIpaMapping(final, this.#config.final),
+        tone,
+      };
     });
   }
 
   public ipa(sentence: string): string {
-    const convertWord = (word: string) => this.syllabify(word).map(syllableToIPA).join(".");
+    const convertWord = (word: string) => syllablesToIPA(this.syllabify(word));
     return (
       "/" +
       sentence
         .replaceAll(",", " | ") // minor prosodic break
         .replaceAll(/\s+/g, " ") // squeeze
+        .replace(/^-/, "") // prefix hyphen
         .split(/[_ ]/)
         .map(convertWord)
         .join(" ") +
       "/"
     );
+  }
+
+  get config(): Readonly<SyllableConfig> {
+    return this.#config;
   }
 }
