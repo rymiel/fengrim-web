@@ -238,9 +238,9 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
       <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" fill />
       <WordSelect
         onSelect={(t) => {
-          setSol((c) => `${c.trim()} ${t.sol}`);
-          setSolSep((c) => `${c.trim()} ${t.sol}`);
-          setEngSep((c) => `${c.trim()} ${t.meanings[0]?.eng}`);
+          setSol((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
+          setSolSep((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
+          setEngSep((c) => `${c.trimEnd()} ${t.meanings[0]?.eng}`.trimStart());
         }}
       />
     </ControlGroup>
