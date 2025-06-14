@@ -234,10 +234,19 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
     content: JSON.stringify(data),
   });
   const form = <>
-    <InputGroup onValueChange={setSol} defaultValue={sol} placeholder="Sentence" />
-    <InputGroup onValueChange={setSolSep} defaultValue={solSep} placeholder="Interlinearised sentence" />
-    <InputGroup onValueChange={setEngSep} defaultValue={engSep} placeholder="Interlinearised translation" />
-    <InputGroup onValueChange={setEng} defaultValue={eng} placeholder="Translation" />
+    <ControlGroup fill>
+      <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" fill />
+      <WordSelect
+        onSelect={(t) => {
+          setSol((c) => `${c.trim()} ${t.sol}`);
+          setSolSep((c) => `${c.trim()} ${t.sol}`);
+          setEngSep((c) => `${c.trim()} ${t.meanings[0]?.eng}`);
+        }}
+      />
+    </ControlGroup>
+    <InputGroup onValueChange={setSolSep} value={solSep} placeholder="Interlinearised sentence" />
+    <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
+    <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
   </>;
   const preview = <InterlinearGloss data={data} asterisk script />;
 
