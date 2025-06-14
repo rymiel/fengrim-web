@@ -1,5 +1,5 @@
 import { Button, HTMLTable, Icon, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { entryHasMatch, UserOnly, useTitle } from "conlang-web-components";
+import { entryHasMatch, prefixSplit, UserOnly, useTitle } from "conlang-web-components";
 import { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -24,8 +24,7 @@ function mergeDefinitions(meanings: FullMeaning[]) {
   return meanings.map((m, mi) => {
     let eng = m.eng;
     if (eng.startsWith("(")) {
-      const split = m.eng.split(")", 2);
-      eng = (split[1] ?? split[0]).trim();
+      eng = prefixSplit(eng)[1];
     }
     if (eng.startsWith("to be ")) {
       if (toBe) {

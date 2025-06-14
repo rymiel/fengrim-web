@@ -1,5 +1,5 @@
 import { H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearData, InterlinearGloss, prefixSplit, RichText, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -39,16 +39,12 @@ function WordPageHeader({ entry }: { entry: FullEntry }) {
 }
 
 function Meaning({ eng }: { eng: string }) {
-  if (eng.startsWith("(")) {
-    const split = eng.slice(1).split(")", 2);
-    if (split.length === 2) {
-      return <p>
-        <i>({split[0]})</i>
-        {split[1]}
-      </p>;
-    }
-  }
-  return <p>{eng}</p>;
+  const [prefix, rest] = prefixSplit(eng);
+
+  return <p>
+    {prefix && <i>({prefix}) </i>}
+    {rest}
+  </p>;
 }
 
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
