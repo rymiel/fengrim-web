@@ -248,7 +248,7 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
     <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
     <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
   </>;
-  const preview = <InterlinearGloss data={data} asterisk script />;
+  const preview = <InterlinearGloss data={data} asterisk />;
 
   return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
 }
