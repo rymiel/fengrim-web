@@ -58,31 +58,17 @@ function seedTally(keys: readonly string[]): Record<string, number> {
   return obj;
 }
 
-function pairArrayHalves<T>(arr: T[]): T[][] {
-  const n = arr.length;
+function columns<T>(arr: T[], n: number): T[][] {
   const result: T[][] = [];
-
-  const offset = Math.ceil(n / 2);
-
-  for (let i = 0; i < offset; i++) {
-    const secondIndex = i + offset;
-
-    if (secondIndex < n) {
-      result.push([arr[i], arr[secondIndex]]);
-    } else {
-      result.push([arr[i]]);
+  const rows = Math.ceil(arr.length / n);
+  for (let row = 0; row < rows; row++) {
+    const tuple: T[] = [];
+    for (let i = row; i < arr.length; i += rows) {
+      tuple.push(arr[i]);
     }
+    result.push(tuple);
   }
-
   return result;
-}
-
-function toChunks<T>(arr: T[], chunkSize: 1 | 2): T[][] {
-  if (chunkSize === 1) {
-    return arr.map((i) => [i]);
-  } else {
-    return pairArrayHalves(arr);
-  }
 }
 
 function SyllableContent() {
@@ -122,7 +108,7 @@ function SyllableContent() {
 
         <HTMLTable compact striped>
           <tbody>
-            {toChunks(
+            {columns(
               Object.entries(tally).sort((a, b) => b[1] - a[1]),
               size,
             ).map((chunk, i) => <tr key={i}>
