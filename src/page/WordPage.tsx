@@ -95,7 +95,7 @@ export default function WordPage() {
     const matching = entries.filter((e) => e.sol === word);
 
     if (matching.length > 0) {
-      const parts = matching.map((i) => PARTS_OF_SPEECH[i.extra]);
+      const parts = matching.map((i) => PARTS_OF_SPEECH[i.extra] ?? i.extra);
       content = <div className="inter word">
         <nav>
           <ol>
