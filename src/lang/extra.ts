@@ -22,4 +22,5 @@ export const PARTS_OF_SPEECH: Readonly<Record<string, string>> = {
   "part.": "Particle",
   "interj.": "Interjection",
   phrase: "Phrase",
+  "conj.": "Conjunction",
 };
