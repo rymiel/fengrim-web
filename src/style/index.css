@@ -398,6 +398,11 @@ h4 .bp5-icon {
   text-align: center;
 }
 
+
+.general-stats table tr :nth-child(odd) {
+  text-align: right;
+}
+
 .general-stats table td:nth-child(even):not(:last-child) {
   border-right: solid rgba(255, 255, 255, 0.2);
 }
