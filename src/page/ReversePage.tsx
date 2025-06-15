@@ -1,5 +1,5 @@
 import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { prefixSplit, uri, useTitle } from "conlang-web-components";
+import { uri, useTitle } from "conlang-web-components";
 import { Fragment, memo, ReactNode, useContext, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -29,10 +29,7 @@ interface Affix {
 }
 
 function affixTreeNode(original: string, cut: string, affix: Affix, children: React.ReactNode[]) {
-  let meaning = affix.entry.meanings[0].eng;
-  if (meaning.startsWith("(")) {
-    meaning = prefixSplit(meaning)[1];
-  }
+  const meaning = affix.entry.meanings[0].eng;
   const affixed = affix.isSuffix ? "suffixed" : affix.isPrefix ? "prefixed" : "affixed";
 
   return <>

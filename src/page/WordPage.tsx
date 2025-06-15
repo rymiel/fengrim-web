@@ -1,5 +1,5 @@
 import { H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { InterlinearData, InterlinearGloss, prefixSplit, RichText, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -38,12 +38,10 @@ function WordPageHeader({ entry }: { entry: FullEntry }) {
   </>;
 }
 
-function Meaning({ eng }: { eng: string }) {
-  const [prefix, rest] = prefixSplit(eng);
-
+function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
   return <p>
     {prefix && <i>({prefix}) </i>}
-    {rest}
+    {eng}
   </p>;
 }
 
@@ -72,7 +70,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
     </Tag>}
     <ol>
       {entry.meanings.map((m) => <li key={m.hash}>
-        <Meaning eng={m.eng} />
+        <Meaning prefix={m.prefix} eng={m.eng} />
         {m.sections.length > 0 && <dl>
           {m.sections.map((s) => <dd key={s.hash}>
             <SectionContent entry={entry} section={s} on={entry.hash} />

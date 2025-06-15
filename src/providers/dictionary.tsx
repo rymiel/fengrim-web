@@ -14,6 +14,7 @@ export interface FullEntry extends Omit<ApiWord, "meanings" | "sections"> {
 }
 
 export interface FullMeaning extends Omit<ApiMeaning, "sections"> {
+  prefix?: string;
   sections: FullSection[];
 }
 

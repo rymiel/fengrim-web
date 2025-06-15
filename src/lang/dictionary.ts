@@ -1,4 +1,4 @@
-import { ApiData, entrySort, uri } from "conlang-web-components";
+import { ApiData, entrySort, prefixSplit, uri } from "conlang-web-components";
 
 import { FullEntry } from "providers/dictionary";
 import { LangConfigData } from "providers/langConfig";
@@ -8,10 +8,11 @@ import { partOfExtra } from "./extra";
 type ApiDictionary = Pick<ApiData, "words" | "meanings" | "sections">;
 
 export function transformDictionary(lang: LangConfigData, d: ApiDictionary): FullEntry[] {
-  const mMeanings = d.meanings.map((i) => ({
-    ...i,
-    sections: i.sections.map((s) => d.sections.find((j) => j.hash === s)!),
-  }));
+  const mMeanings = d.meanings.map((meaning) => {
+    const [prefix, eng] = prefixSplit(meaning.eng);
+    const sections = meaning.sections.map((s) => d.sections.find((j) => j.hash === s)!);
+    return { ...meaning, eng, prefix, sections };
+  });
   const mWords = d.words
     .map((word) => {
       const part = partOfExtra(word.extra);
