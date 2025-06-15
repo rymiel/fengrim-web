@@ -76,12 +76,16 @@ export class SyllableInstance {
     return (
       "/" +
       sentence
-        .replaceAll(",", " | ") // minor prosodic break
-        .replaceAll(/\s+/g, " ") // squeeze
-        .replace(/^-/, "") // prefix hyphen
-        .split(/[_ ]/)
-        .map(convertWord)
-        .join(" ") +
+        .split(",")
+        .map((phrase) =>
+          phrase
+            .replaceAll(/\s+/g, " ") // squeeze
+            .replace(/^-/, "") // prefix hyphen
+            .split(/[_ ]/)
+            .map(convertWord)
+            .join(" "),
+        )
+        .join(" | ") + // minor prosodic break
       "/"
     );
   }
