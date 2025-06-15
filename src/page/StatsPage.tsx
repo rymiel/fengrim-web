@@ -15,97 +15,40 @@ function OldContent() {
 
   if (!entries) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
-  const nounClassTally: Record<string, number> = {};
-  const verbClassTally: Record<string, number> = {};
   const extraTally: Record<string, number> = {};
 
   for (const e of entries) {
     increment(extraTally, e.extra);
   }
 
-  return <div className="stats">
-    <H4 className="n-header">Noun stats</H4>
-
-    <HTMLTable className="n-left" compact striped>
-      <thead>
-        <tr>
-          <th>Class</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(nounClassTally)
-          .sort()
-          .map((i) => <tr key={i}>
-            <td>{i}</td>
-            <td>{nounClassTally[i]}</td>
-          </tr>)}
-      </tbody>
-    </HTMLTable>
-    <HTMLTable className="n-right" compact striped>
-      <thead>
-        <tr>
-          <th>Gender</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </HTMLTable>
-    <Divider className="divider-1" />
-    <H4 className="v-header">Verb stats</H4>
-    <HTMLTable className="v-left" compact striped>
-      <thead>
-        <tr>
-          <th>Class</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(verbClassTally)
-          .sort()
-          .map((i) => <tr key={i}>
-            <td>{i}</td>
-            <td>{verbClassTally[i]}</td>
-          </tr>)}
-      </tbody>
-    </HTMLTable>
-    <HTMLTable className="v-right" compact striped>
-      <thead>
-        <tr>
-          <th>Base</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </HTMLTable>
-    <Divider className="divider-2" />
-    <H4 className="g-header">General stats</H4>
-    <HTMLTable className="g-left" compact striped>
-      <thead>
-        <tr>
-          <th>Extra</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(extraTally)
-          .sort()
-          .map((i) => <tr key={i}>
-            <td>{i}</td>
-            <td>{extraTally[i]}</td>
-          </tr>)}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>Total</td>
-          <td>{entries.length}</td>
-        </tr>
-      </tfoot>
-    </HTMLTable>
+  return <div className="general-stats">
+    <div>
+      <H4>General stats</H4>
+      <HTMLTable compact striped>
+        <thead>
+          <tr>
+            <th>Extra</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(extraTally)
+            .sort()
+            .map((i) => <tr key={i}>
+              <td>{i}</td>
+              <td>{extraTally[i]}</td>
+            </tr>)}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td>{entries.length}</td>
+          </tr>
+        </tfoot>
+      </HTMLTable>
+    </div>
   </div>;
 }
-
-const EMPTY = ["∅", "∅"];
 
 function seedTally(keys: readonly string[]): Record<string, number> {
   const obj: Record<string, number> = {};
@@ -113,6 +56,33 @@ function seedTally(keys: readonly string[]): Record<string, number> {
     obj[k] = 0;
   }
   return obj;
+}
+
+function pairArrayHalves<T>(arr: T[]): T[][] {
+  const n = arr.length;
+  const result: T[][] = [];
+
+  const offset = Math.ceil(n / 2);
+
+  for (let i = 0; i < offset; i++) {
+    const secondIndex = i + offset;
+
+    if (secondIndex < n) {
+      result.push([arr[i], arr[secondIndex]]);
+    } else {
+      result.push([arr[i]]);
+    }
+  }
+
+  return result;
+}
+
+function toChunks<T>(arr: T[], chunkSize: 1 | 2): T[][] {
+  if (chunkSize === 1) {
+    return arr.map((i) => [i]);
+  } else {
+    return pairArrayHalves(arr);
+  }
 }
 
 function SyllableContent() {
@@ -130,40 +100,37 @@ function SyllableContent() {
   for (const entry of entries) {
     const sylls = config.syllable.syllabify(entry.sol);
     for (const syll of sylls) {
-      increment(initialTally, (syll.initial ?? EMPTY)[1]);
+      increment(initialTally, syll.initial?.[1] ?? "∅");
       increment(vowelTally, syll.vowel[1]);
-      increment(finalTally, (syll.final ?? EMPTY)[1]);
+      increment(finalTally, syll.final?.[1] ?? "∅");
       increment(toneTally, syll.tone[1]);
     }
   }
 
   const tables = [
-    [initialTally, "Initial"],
-    [vowelTally, "Vowel"],
-    [finalTally, "Final"],
-    [toneTally, "Tone"],
+    [initialTally, "Initial", 2],
+    [vowelTally, "Vowel", 1],
+    [finalTally, "Final", 1],
+    [toneTally, "Tone", 1],
   ] as const;
 
   return <div className="general-stats">
-    {tables.map(([tally, name], i) => <Fragment key={name}>
+    {tables.map(([tally, name, size], i) => <Fragment key={name}>
       {i > 0 && <Divider />}
       <div>
-        <H4>{name} stats</H4>
+        <H4>{name}</H4>
 
         <HTMLTable compact striped>
-          <thead>
-            <tr>
-              <th>Phone</th>
-              <th>Count</th>
-            </tr>
-          </thead>
           <tbody>
-            {Object.entries(tally)
-              .sort((a, b) => b[1] - a[1])
-              .map(([k, v]) => <tr key={k}>
+            {toChunks(
+              Object.entries(tally).sort((a, b) => b[1] - a[1]),
+              size,
+            ).map((chunk, i) => <tr key={i}>
+              {chunk.map(([k, v]) => <Fragment key={k}>
                 <td>{k}</td>
                 <td>{v}</td>
-              </tr>)}
+              </Fragment>)}
+            </tr>)}
           </tbody>
         </HTMLTable>
       </div>
