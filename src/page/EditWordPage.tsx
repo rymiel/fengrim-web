@@ -80,6 +80,7 @@ function MeaningData({ v }: { v: FullMeaning }) {
   const edit = useEditContext();
   return <>
     <BaseData v={v} />
+    <InfoTag left="prefix" right={v.prefix} onClick={() => edit.openDrawer(<MeaningEditor existing={v} />)} />
     <InfoTag left="eng" right={v.eng} onClick={() => edit.openDrawer(<MeaningEditor existing={v} />)} />
     <SectionableData v={v} />
   </>;
@@ -311,7 +312,8 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
 function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
-  const [eng, setEng] = useState(existing?.eng ?? "");
+  const [rest, setRest] = useState(existing?.eng ?? "");
+  const [prefix, setPrefix] = useState(existing?.prefix ?? "");
   const as = existing?.hash;
 
   if (to === undefined && as === undefined) {
@@ -319,6 +321,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
   }
 
   const submit = () => {
+    const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
     API.lang("/meaning", "POST", { to, as, eng }).then(() => {
       dict.refresh();
       edit.closeDrawer();
@@ -332,7 +335,8 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     {as && <p>
       Editing meaning <Code>{as}</Code>.
     </p>}
-    <InputGroup onValueChange={setEng} defaultValue={eng} placeholder="English" />
+    <InputGroup onValueChange={setPrefix} defaultValue={prefix} placeholder="Prefix" />
+    <InputGroup onValueChange={setRest} defaultValue={rest} placeholder="English" />
     <Button fill intent="success" text="Submit" onClick={submit} />
   </div>;
 }
