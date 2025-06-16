@@ -46,8 +46,8 @@ const ReverseContent = memo(function ReverseContent({ entries, query }: { entrie
         .map((entry) => {
           const isSuffix = entry.sol.startsWith("-");
           const isPrefix = entry.sol.endsWith("-");
-          const appliesToNoun = entry.meanings.some((i) => i.eng.startsWith("(noun)"));
-          const appliesToVerb = entry.meanings.some((i) => i.eng.startsWith("(verb)"));
+          const appliesToNoun = entry.meanings.some((i) => i.prefix === "noun");
+          const appliesToVerb = entry.meanings.some((i) => i.prefix === "verb");
           // noun+verb affixes?
           const applies = appliesToNoun ? Part.Noun : appliesToVerb ? Part.Verb : undefined;
           const raw = isSuffix ? entry.sol.slice(1) : isPrefix ? entry.sol.slice(0, -1) : entry.sol;
