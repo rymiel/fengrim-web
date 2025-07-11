@@ -1,6 +1,6 @@
 {
   "name": "fengrim-web",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "private": true,
   "description": "",
   "main": "index.js",
@@ -16,7 +16,7 @@
     "@blueprintjs/select": "^5.2.3",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "conlang-web-components": "gitlab:rymiel/conlang-web-components#7a5cd6f67ab2b14d1e7c3680cb5f3d9ed610928e",
+    "conlang-web-components": "gitlab:rymiel/conlang-web-components#662bf5d1db7fb55205ad5bd746ba2d3087dfc442",
     "html-webpack-plugin": "^5.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

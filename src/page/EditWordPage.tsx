@@ -58,6 +58,7 @@ function EntryData({ v }: { v: FullEntry }) {
     <InfoTag left="extra" right={v.extra} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
     <InfoTag left="tag" right={v.tag} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
     <InfoTag left="ex" right={v.ex} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
+    <InfoTag left="gloss" right={v.gloss} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
     <InfoTag left="part" right={v.part === null ? null : Part[v.part]} generated />
     <InfoTag left="ipa" right={v.ipa} generated />
     <InfoSection title="meanings">
@@ -241,7 +242,7 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
         onSelect={(t) => {
           setSol((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
           setSolSep((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
-          setEngSep((c) => `${c.trimEnd()} ${t.meanings[0]?.eng}`.trimStart());
+          setEngSep((c) => `${c.trimEnd()} ${t.gloss ?? t.meanings[0]?.eng}`.trimStart());
         }}
       />
     </ControlGroup>
@@ -289,10 +290,17 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
   const [sol, setSol] = useState(existing.sol);
   const [extra, setExtra] = useState(existing.extra);
   const [isObsolete, setObsolete] = useState(existing.tag === "obsolete");
+  const [gloss, setGloss] = useState(existing.gloss);
   const as = existing.hash;
 
   const submit = () => {
-    API.lang("/entry", "POST", { as, sol, extra, tag: isObsolete ? "obsolete" : undefined }).then(() => {
+    API.lang("/entry", "POST", {
+      as,
+      sol,
+      extra,
+      tag: isObsolete ? "obsolete" : undefined,
+      gloss: gloss === "" ? undefined : gloss,
+    }).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -304,6 +312,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
     </p>
     <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={LANGUAGE} />
     <InputGroup onValueChange={setExtra} defaultValue={extra} placeholder="Extra" />
+    <InputGroup onValueChange={setGloss} defaultValue={gloss} placeholder="Gloss" />
     <Checkbox onChange={(e) => setObsolete(e.currentTarget.checked)} defaultValue={extra} label="Obsolete" />
     <Button fill intent="success" text="Submit" onClick={submit} />
   </div>;
