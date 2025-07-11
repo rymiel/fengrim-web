@@ -12,7 +12,7 @@ import { uri, User, useTitle } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { partOfExtra, PARTS_OF_SPEECH } from "lang/extra";
+import { partOfExtra } from "lang/extra";
 import { SyllableInstance } from "lang/word";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
@@ -20,6 +20,7 @@ import { API, LANGUAGE } from "api";
 
 function Editor({ syllable }: { syllable: SyllableInstance }) {
   const dict = useContext(Dictionary);
+  const lang = useContext(LangConfig);
   const navigate = useNavigate();
   const [sol, setSol] = useState("");
   const [extra, setExtra] = useState("");
@@ -48,7 +49,7 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
         fill
       >
         <option value="">Extra</option>
-        {Object.entries(PARTS_OF_SPEECH).map(([k, v]) => {
+        {Object.entries(lang?.parts ?? {}).map(([k, v]) => {
           return <option key={k} value={k}>
             {v}
           </option>;

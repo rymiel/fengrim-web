@@ -1,4 +1,4 @@
-import { ApiConfig, GenerationInstance, Abbreviations } from "conlang-web-components";
+import { ApiConfig, GenerationInstance, KeyValue } from "conlang-web-components";
 import { createContext } from "react";
 
 import { SoundChangeInstance } from "lang/soundChange";
@@ -9,7 +9,8 @@ export interface LangConfigData {
   soundChange: SoundChangeInstance;
   generation: GenerationInstance;
   syllable: SyllableInstance;
-  abbreviations: Abbreviations;
+  abbreviations: KeyValue;
+  parts: KeyValue;
   ipa: (sentence: string) => string;
   script: (sentence: string) => string;
 }

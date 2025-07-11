@@ -4,13 +4,14 @@ import { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
-import { PARTS_OF_SPEECH } from "lang/extra";
 import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
 import { Dictionary, FullEntry, FullMeaning } from "providers/dictionary";
+import { LangConfig } from "providers/langConfig";
 import { LANGUAGE } from "api";
 
 function ExtraCell({ extra }: { extra: string }) {
-  const abbr = PARTS_OF_SPEECH[extra] as string | undefined;
+  const lang = useContext(LangConfig);
+  const abbr = lang?.parts?.[extra];
 
   if (abbr) {
     return <abbr title={abbr}>{extra}</abbr>;

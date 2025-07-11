@@ -3,9 +3,9 @@ import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { PARTS_OF_SPEECH } from "lang/extra";
 import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
+import { LangConfig } from "providers/langConfig";
 
 function SectionContent({ entry, section, on }: { entry: FullEntry; section: FullSection; on: string }) {
   const { user } = useContext(User);
@@ -47,6 +47,7 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
 
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
   const { user } = useContext(User);
+  const lang = useContext(LangConfig);
   const ref = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
     }
   }, [highlighted]);
 
-  const partHeader = PARTS_OF_SPEECH[entry.extra] ?? entry.extra;
+  const partHeader = lang?.parts?.[entry.extra] ?? entry.extra;
 
   return <>
     <H3 className="meaning" ref={ref}>
@@ -84,6 +85,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
 
 export default function WordPage() {
   const { entries } = useContext(Dictionary);
+  const lang = useContext(LangConfig);
   const { word, num } = useParams() as { word: string; num?: string };
   useTitle(word);
 
@@ -93,7 +95,7 @@ export default function WordPage() {
     const matching = entries.filter((e) => e.sol === word);
 
     if (matching.length > 0) {
-      const parts = matching.map((i) => PARTS_OF_SPEECH[i.extra] ?? i.extra);
+      const parts = matching.map((i) => lang?.parts?.[i.extra] ?? i.extra);
       content = <div className="inter word">
         <nav>
           <ol>

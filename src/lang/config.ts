@@ -1,4 +1,4 @@
-import { Abbreviations, ApiConfig, GenerationConfig, GenerationInstance } from "conlang-web-components";
+import { ApiConfig, GenerationConfig, GenerationInstance, KeyValue } from "conlang-web-components";
 
 import { LangConfigData } from "providers/langConfig";
 
@@ -11,11 +11,12 @@ export function transformConfig(config: ApiConfig): LangConfigData {
   const soundChange = new SoundChangeInstance(SOUND_CHANGE_CONFIG);
   const generation = new GenerationInstance(config.generation as GenerationConfig);
   const syllable = new SyllableInstance(SYLLABLE_CONFIG);
-  const abbreviations = config.abbr as Abbreviations;
+  const abbreviations = config.abbr as KeyValue;
+  const parts = config.parts as KeyValue;
   const ipa = (sentence: string) => syllable.ipa(sentence);
   const script = () => "no script :("; //TODO
 
-  return { soundChange, generation, syllable, abbreviations, ipa, script, config };
+  return { soundChange, generation, syllable, abbreviations, parts, ipa, script, config };
 }
 
 const SOUND_CHANGE_CONFIG: SoundChangeConfig = {
