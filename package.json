@@ -1,6 +1,6 @@
 {
   "name": "fengrim-web",
-  "version": "0.4.15",
+  "version": "0.5.0",
   "private": true,
   "description": "",
   "main": "index.js",
@@ -11,12 +11,11 @@
     "lint": "eslint --ext '.ts,.tsx' --max-warnings 0 -- ./"
   },
   "dependencies": {
-    "@blueprintjs/core": "^5.12.0",
-    "@blueprintjs/popover2": "^2.1.4",
-    "@blueprintjs/select": "^5.2.3",
+    "@blueprintjs/core": "^6.0.0",
+    "@blueprintjs/select": "^6.0.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "conlang-web-components": "gitlab:rymiel/conlang-web-components#6e3529d74f5bb89c1d60ddfbee111d3b01bf4f78",
+    "conlang-web-components": "gitlab:rymiel/conlang-web-components#3a9bf3566ef364047501baae9d01273c7071c321",
     "html-webpack-plugin": "^5.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

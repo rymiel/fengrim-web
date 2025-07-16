@@ -60,7 +60,7 @@ main {
 }
 
 main,
-.bp5-portal {
+.bp6-portal {
   font-size: 18px;
 }
 
@@ -73,10 +73,10 @@ a {
   transition: all 180ms;
 }
 
-.bp5-dark h1 a,
-.bp5-dark h1 a:visited,
-.bp5-dark h1 a:active,
-.bp5-dark h1 a:hover {
+.bp6-dark h1 a,
+.bp6-dark h1 a:visited,
+.bp6-dark h1 a:active,
+.bp6-dark h1 a:hover {
   text-decoration: none;
   color: #f6f7f9;
 }
@@ -90,7 +90,7 @@ a {
   display: flex;
 }
 
-body.bp5-dark {
+body.bp6-dark {
   background-color: #252a31;
 }
 
@@ -112,9 +112,9 @@ footer {
   bottom: 0;
 }
 
-header h1.bp5-heading,
-header h2.bp5-heading,
-header h3.bp5-heading {
+header h1.bp6-heading,
+header h2.bp6-heading,
+header h3.bp6-heading {
   display: inline;
   margin-top: 0;
   margin-bottom: 0;
@@ -126,7 +126,7 @@ header .menu {
   cursor: pointer;
 }
 
-header .bp5-divider {
+header .bp6-divider {
   display: inline-block;
   height: 2rem;
   margin-top: -0.5rem;
@@ -148,35 +148,35 @@ header .bp5-divider {
   margin-top: 2rem;
 }
 
-.bp5-callout.bp5-compact.edit-section {
+.bp6-callout.bp6-compact.edit-section {
   width: fit-content;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.bp5-dark .bp5-callout.bp5-intent-primary:not(.bp5-minimal).edit-section {
+.bp6-dark .bp6-callout.bp6-intent-primary:not(.bp6-minimal).edit-section {
   background-color: rgba(45, 114, 210, 0.08);
   border: 1px solid rgba(45, 114, 210);
 }
 
 /* fix weird behaviour */
-.bp5-non-ideal-state > .bp5-fill.bp5-button-group {
+.bp6-non-ideal-state > .bp6-fill.bp6-button-group {
   flex-grow: 0;
   flex-shrink: 0;
 }
 
-table.bp5-html-table.bp5-compact.dictionary th,
-table.bp5-html-table.bp5-compact.dictionary td {
+table.bp6-html-table.bp6-compact.dictionary th,
+table.bp6-html-table.bp6-compact.dictionary td {
   padding-bottom: 4px;
   padding-top: 4px;
   vertical-align: middle;
 }
 
-table.bp5-html-table.bp5-compact.dictionary td.dual * {
+table.bp6-html-table.bp6-compact.dictionary td.dual * {
   margin: auto;
 }
 
-table.bp5-html-table.bp5-compact.inflection p {
+table.bp6-html-table.bp6-compact.inflection p {
   margin-bottom: 0;
 }
 
@@ -192,7 +192,7 @@ table.bp5-html-table.bp5-compact.inflection p {
   border-bottom: 3px solid;
 }
 
-table.bp5-html-table.bp5-compact.inflection .rb {
+table.bp6-html-table.bp6-compact.inflection .rb {
   text-align: right;
 }
 
@@ -245,8 +245,8 @@ footer p {
   }
 }
 
-.word h3.bp5-heading.meaning,
-.word h4.bp5-heading {
+.word h3.bp6-heading.meaning,
+.word h4.bp6-heading {
   scroll-margin-top: 1em;
   margin-top: 1rem;
 }
@@ -266,19 +266,19 @@ abbr {
   margin-top: auto;
 }
 
-h1 .bp5-icon,
-h2 .bp5-icon,
-h3 .bp5-icon,
-h4 .bp5-icon {
+h1 .bp6-icon,
+h2 .bp6-icon,
+h3 .bp6-icon,
+h4 .bp6-icon {
   vertical-align: bottom;
 }
 
-.dictionary tr td .bp5-icon {
+.dictionary tr td .bp6-icon {
   vertical-align: bottom;
   margin-left: 0.3rem;
 }
 
-.bp5-dark .dictionary td:has(> a.link-fill) {
+.bp6-dark .dictionary td:has(> a.link-fill) {
   padding: 0;
   min-height: 34px;
 }
@@ -295,7 +295,7 @@ h4 .bp5-icon {
   }
 }
 
-.bp5-dark .dictionary a.link-fill {
+.bp6-dark .dictionary a.link-fill {
   color: inherit;
   width: 100%;
   height: 100%;
@@ -304,7 +304,7 @@ h4 .bp5-icon {
   align-items: center;
 }
 
-.bp5-dark .dictionary a.link-fill:hover {
+.bp6-dark .dictionary a.link-fill:hover {
   text-decoration: none;
 }
 
@@ -315,19 +315,19 @@ h4 .bp5-icon {
   background-color: #252a31;
 }
 
-.bp5-dark a.missing {
+.bp6-dark a.missing {
   color: #ff4242;
 }
 
-.bp5-dark a.missing:hover {
+.bp6-dark a.missing:hover {
   color: #ef8174;
 }
 
-.bp5-dark a.missing:active {
+.bp6-dark a.missing:active {
   color: #f8a397;
 }
 
-.bp5-form-group.compact {
+.bp6-form-group.compact {
   margin-bottom: 0;
 }
 

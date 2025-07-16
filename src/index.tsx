@@ -21,7 +21,6 @@ import { API } from "api";
 import { App, toastErrorHandler } from "App";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
-import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 import "conlang-web-components/src/style.css";
 import "./style/index.css";
 
