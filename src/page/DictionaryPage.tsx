@@ -99,7 +99,7 @@ export default function DictionaryPage() {
 
   return <div className="inter middle">
     <div className="around-dictionary" ref={handleSearchContainer}>
-      <InputGroup type="search" placeholder="Search" onValueChange={setSearch} value={search} large />
+      <InputGroup type="search" placeholder="Search" onValueChange={setSearch} value={search} size="large" />
     </div>
 
     <HTMLTable className="dictionary" compact striped interactive>

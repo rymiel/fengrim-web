@@ -110,7 +110,7 @@ function SectionData({ v }: { v: FullSection }) {
       return [element, handler];
     } else {
       const handler = () => {};
-      const element = <Tag large intent="danger">
+      const element = <Tag size="large" intent="danger">
         Unknown section {v.title}.
       </Tag>;
       return [element, handler];

@@ -76,7 +76,7 @@ const ReverseContent = memo(function ReverseContent({ entries, query }: { entrie
     return <ul>
       <li>
         <i>{query}</i>:{" "}
-        <Tag intent="danger" large icon="cross-circle">
+        <Tag intent="danger" size="large" icon="cross-circle">
           Invalid word
         </Tag>
       </li>
@@ -135,7 +135,7 @@ export default function ReversePage() {
           placeholder={`Reverse search (${forms})`}
           onValueChange={(s) => setSearch(s)}
           value={search}
-          large
+          size="large"
           fill
         />
         <Button icon="arrow-right" intent="primary" type="submit" />

@@ -25,7 +25,7 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
       <RichText text={section.content} on={on} />
     </>;
   } else {
-    return <Tag large intent="danger">
+    return <Tag size="large" intent="danger">
       Unknown section {section.title}.
     </Tag>;
   }
@@ -66,7 +66,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
       </span>}
     </H3>
 
-    {entry.tag && <Tag large intent="danger">
+    {entry.tag && <Tag size="large" intent="danger">
       {entry.tag}
     </Tag>}
     <ol>

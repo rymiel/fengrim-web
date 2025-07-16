@@ -59,7 +59,7 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
       <span>{syllable.ipa(sol)}</span>
       <Button fill intent="success" text="Submit" onClick={submit} />
     </ControlGroup>
-    {!valid && part !== null && <Tag large intent="danger">
+    {!valid && part !== null && <Tag size="large" intent="danger">
       Invalid form
     </Tag>}
   </div>;

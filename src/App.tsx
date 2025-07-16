@@ -22,7 +22,7 @@ export const AppToaster = (): Promise<Toaster> => {
   if (toasterCache !== null) {
     return Promise.resolve(toasterCache);
   }
-  const t = OverlayToaster.createAsync({
+  const t = OverlayToaster.create({
     position: Position.TOP,
     usePortal: true,
   });
