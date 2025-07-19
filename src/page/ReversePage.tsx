@@ -38,6 +38,12 @@ function affixTreeNode(original: string, cut: string, affix: Affix, children: Re
   </>;
 }
 
+const AFFIX_PARTS = {
+  noun: Part.Noun,
+  verb: Part.Verb,
+  adjective: Part.Adjective,
+} as const;
+
 const ReverseContent = memo(function ReverseContent({ entries, query }: { entries: FullEntry[]; query: string }) {
   const affixes: Affix[] = useMemo(
     () =>
@@ -46,15 +52,16 @@ const ReverseContent = memo(function ReverseContent({ entries, query }: { entrie
         .map((entry) => {
           const isSuffix = entry.sol.startsWith("-");
           const isPrefix = entry.sol.endsWith("-");
-          const appliesToNoun = entry.meanings.some((i) => i.prefix === "noun");
-          const appliesToVerb = entry.meanings.some((i) => i.prefix === "verb");
           // noun+verb affixes?
-          const applies = appliesToNoun ? Part.Noun : appliesToVerb ? Part.Verb : undefined;
+          const applies = Object.entries(AFFIX_PARTS).find(([prefix]) =>
+            entry.meanings.some((i) => i.prefix === prefix),
+          )?.[1];
           const raw = isSuffix ? entry.sol.slice(1) : isPrefix ? entry.sol.slice(0, -1) : entry.sol;
           return { entry, isSuffix, isPrefix, applies, raw };
         }),
     [entries],
   );
+  console.log(affixes);
 
   const lookup = (q: string, { only }: { only?: Part } = {}) =>
     entries.filter((i) => i.sol === q && (only === undefined || i.part === only)).map(terminalTreeNode);
@@ -94,6 +101,7 @@ export default function ReversePage() {
   useTitle("Reverse");
 
   let content: ReactNode = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  let forms = "...";
 
   if (query === undefined) {
     content = <NonIdealState icon="search" />;
@@ -103,23 +111,24 @@ export default function ReversePage() {
       {j > 0 && <Divider />}
       <ReverseContent entries={entries} query={i} />
     </Fragment>);
-  }
 
-  let forms = "...";
-  if (entries) {
     let nouns = 0;
     let verbs = 0;
+    let adjs = 0;
     for (const e of entries) {
       if (e.part === Part.Noun) {
         nouns++;
       } else if (e.part === Part.Verb) {
         verbs++;
+      } else if (e.part === Part.Adjective) {
+        adjs++;
       }
     }
     // TODO: automate somehow?
     const nounSuffixes = 1; // -foo
-    const verbSuffixes = 2; // -tha, -jóm
-    const estimate = entries.length + nouns * nounSuffixes + verbs * verbSuffixes;
+    const verbSuffixes = 3; // -tha, -jóm, -jes
+    const adjSuffixes = 1; // -tàng
+    const estimate = entries.length + nouns * nounSuffixes + verbs * verbSuffixes + adjs * adjSuffixes;
     forms = `${entries.length} forms, ${estimate} estimated`;
   }
 

@@ -1,13 +1,16 @@
 export enum Part {
   Noun,
   Verb,
+  Adjective,
 }
 
 export function partOfExtra(extra: string): Part | null {
-  if (extra.startsWith("N")) {
+  if (extra === "N") {
     return Part.Noun;
-  } else if (extra.startsWith("V")) {
+  } else if (extra === "V") {
     return Part.Verb;
+  } else if (extra === "adj.") {
+    return Part.Adjective;
   } else {
     return null;
   }
