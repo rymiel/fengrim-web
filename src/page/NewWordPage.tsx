@@ -25,13 +25,14 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
   const [sol, setSol] = useState("");
   const [extra, setExtra] = useState("");
   const [eng, setEng] = useState("");
+  const [gloss, setGloss] = useState("");
   const part = partOfExtra(extra);
 
   const valid = part !== null;
 
   const submit = () => {
     const ex = undefined;
-    API.lang<string>("/entry", "POST", { sol, extra, eng, ex }).then((id) => {
+    API.lang<string>("/entry", "POST", { sol, extra, eng, ex, gloss: gloss === "" ? undefined : gloss }).then((id) => {
       dict.refresh();
       navigate(uri`/edit/${id}`);
     });
@@ -56,6 +57,7 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
         })}
       </HTMLSelect>
       <InputGroup onValueChange={setEng} placeholder="Translation" />
+      <InputGroup onValueChange={setGloss} placeholder="Gloss" />
       <span>{syllable.ipa(sol)}</span>
       <Button fill intent="success" text="Submit" onClick={submit} />
     </ControlGroup>
