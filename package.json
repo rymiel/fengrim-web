@@ -1,6 +1,6 @@
 {
   "name": "fengrim-web",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "",
   "main": "index.js",
@@ -37,7 +37,7 @@
     "prettier-no-jsx-parens": "^3.4.0",
     "style-loader": "^4.0.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.2.0"
   },
   "author": "Emilia Kond",
   "license": "UNLICENSED"
