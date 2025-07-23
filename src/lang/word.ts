@@ -76,7 +76,7 @@ export class SyllableInstance {
     return (
       "/" +
       sentence
-        .split(",")
+        .split(/[,.?!]+/g)
         .map((phrase) =>
           phrase
             .replaceAll(/\s+/g, " ") // squeeze
