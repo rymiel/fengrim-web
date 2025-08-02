@@ -329,7 +329,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     throw new Error("One of `as` or `to` must be provided");
   }
 
-  const submit = () => {
+  const doSubmit = () => {
     const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
     API.lang("/meaning", "POST", { to, as, eng }).then(() => {
       dict.refresh();
@@ -337,7 +337,17 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     });
   };
 
-  return <div className="inter">
+  const doDelete = () => {
+    if (as === undefined) {
+      throw new Error("Cannot delete nonexistent section");
+    }
+    API.lang(`/meaning/${as}`, "DELETE").then(() => {
+      dict.refresh();
+      edit.closeDrawer();
+    });
+  };
+
+  return <div className="inter sidebar">
     {to && <p>
       Adding new meaning to <Code>{to}</Code>.
     </p>}
@@ -346,7 +356,8 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     </p>}
     <InputGroup onValueChange={setPrefix} defaultValue={prefix} placeholder="Prefix" />
     <InputGroup onValueChange={setRest} defaultValue={rest} placeholder="English" />
-    <Button fill intent="success" text="Submit" onClick={submit} />
+    <Button fill intent="success" text="Submit" onClick={doSubmit} />
+    {as && <Button fill className="bottom" intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />}
   </div>;
 }
 
