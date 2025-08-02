@@ -52,6 +52,15 @@ export const SIMPLE_SECTIONS = [
 
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
+  const dict = useContext(Dictionary);
+
+  const doDelete = () => {
+    API.lang(`/entry/${v.hash}`, "DELETE").then(() => {
+      dict.refresh();
+      edit.closeDrawer();
+    });
+  };
+
   return <>
     <BaseData v={v} />
     <InfoTag left="sol" right={v.sol} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
@@ -74,6 +83,7 @@ function EntryData({ v }: { v: FullEntry }) {
       />
     </InfoSection>
     <SectionableData v={v} />
+    <Button intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />
   </>;
 }
 
