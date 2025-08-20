@@ -18,6 +18,7 @@ import {
   ApiSection,
   BaseData,
   EditWordPageContent,
+  GlossSelect,
   InfoSection,
   InfoTag,
   InterlinearData,
@@ -248,13 +249,7 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
   const form = <>
     <ControlGroup fill>
       <InputGroup onValueChange={setSol} value={sol} placeholder="Sentence" fill />
-      <WordSelect
-        onSelect={(t) => {
-          setSol((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
-          setSolSep((c) => `${c.trimEnd()} ${t.sol}`.trimStart());
-          setEngSep((c) => `${c.trimEnd()} ${t.gloss ?? t.meanings[0]?.eng}`.trimStart());
-        }}
-      />
+      <GlossSelect {...{ setSol, setSolSep, setEngSep }} />
     </ControlGroup>
     <InputGroup onValueChange={setSolSep} value={solSep} placeholder="Interlinearised sentence" />
     <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
