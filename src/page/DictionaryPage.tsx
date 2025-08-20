@@ -1,7 +1,16 @@
-import { Button, HTMLTable, Icon, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
+import {
+  Classes,
+  HTMLTable,
+  Icon,
+  InputGroup,
+  NonIdealState,
+  Spinner,
+  SpinnerSize,
+  Tag,
+  Text,
+} from "@blueprintjs/core";
 import { entryHasMatch, UserOnly, useTitle } from "conlang-web-components";
 import { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
@@ -80,7 +89,6 @@ function DictionaryRow({ entry }: { entry: FullEntry }) {
 export default function DictionaryPage() {
   useTitle("Home");
   const { entries } = useContext(Dictionary);
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const handleSearchContainer = useCallback((ref: HTMLDivElement | null) => {
@@ -119,7 +127,11 @@ export default function DictionaryPage() {
 
     <UserOnly>
       <div className="around-dictionary" ref={handleAddButton}>
-        <Button intent="success" text="Add new entry" icon="plus" fill onClick={() => navigate("/new")} />
+        {/* Unfortunately Link and blueprint Button don't like cooperating, so I'm forced to do this. */}
+        <Link to="/new" className={`${Classes.BUTTON} ${Classes.INTENT_SUCCESS} ${Classes.FILL}`}>
+          <Icon icon="plus" />
+          <Text>Add new entry</Text>
+        </Link>
       </div>
     </UserOnly>
   </div>;
