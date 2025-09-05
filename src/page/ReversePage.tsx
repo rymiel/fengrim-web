@@ -14,7 +14,7 @@ function terminalTreeNode(entry: FullEntry) {
   const tag = entry.tag === undefined ? undefined : <Tag intent="danger">{entry.tag}</Tag>;
   return <>
     <Link to={entry.link}>
-      <i>{entry.sol}</i>
+      <i>{entry.disp}</i>
     </Link>
     : {tag} ({entry.extra}) "{meaning}"
   </>;

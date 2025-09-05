@@ -7,6 +7,7 @@ export interface FullEntry extends Omit<ApiWord, "meanings" | "sections"> {
   part: Part | null;
   ipa: string;
   link: string;
+  disp: string;
   index: number;
 
   meanings: FullMeaning[];

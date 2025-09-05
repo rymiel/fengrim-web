@@ -33,7 +33,7 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
 
 function WordPageHeader({ entry }: { entry: FullEntry }) {
   return <>
-    <H2>{entry.sol}</H2>
+    <H2>{entry.disp}</H2>
     <span className="space-right">{entry.ipa}</span>
   </>;
 }

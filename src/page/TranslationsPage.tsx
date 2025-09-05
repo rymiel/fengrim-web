@@ -24,7 +24,7 @@ function Content({ entries }: { entries: FullEntry[] }) {
     <ul>
       {examples.map(([entry, nth, sections]) => <li key={`${entry.hash}-${nth}`}>
         <p>
-          <Link to={entry.link}>{entry.sol}</Link> ({nth})
+          <Link to={entry.link}>{entry.disp}</Link> ({nth})
         </p>
         <dl>
           {sections.map((section) => <dd key={section.hash}>

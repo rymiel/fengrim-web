@@ -70,7 +70,7 @@ function DictionaryRow({ entry }: { entry: FullEntry }) {
     </td>
     <td>
       <Link to={e.link} className="link-fill">
-        <i>{e.sol}</i>
+        <i>{e.disp}</i>
       </Link>
     </td>
     <td>

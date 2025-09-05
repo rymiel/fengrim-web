@@ -7,6 +7,14 @@ import { partOfExtra } from "./extra";
 
 type ApiDictionary = Pick<ApiData, "words" | "meanings" | "sections">;
 
+function displayWord({ extra, sol }: { extra: string; sol: string }): string {
+  if (extra === "root") {
+    return `√${sol}`;
+  } else {
+    return sol;
+  }
+}
+
 export function transformDictionary(lang: LangConfigData, d: ApiDictionary): FullEntry[] {
   const mMeanings = d.meanings.map((meaning) => {
     const [prefix, eng] = prefixSplit(meaning.eng);
@@ -19,7 +27,8 @@ export function transformDictionary(lang: LangConfigData, d: ApiDictionary): Ful
       const ipa = lang.ipa(word.sol);
       const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
       const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
-      return { ...word, part, ipa, sections, meanings };
+      const disp = displayWord(word);
+      return { ...word, part, ipa, sections, meanings, disp };
     })
     .sort(entrySort);
   return mWords.map((word, idx) => {

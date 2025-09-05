@@ -71,6 +71,7 @@ function EntryData({ v }: { v: FullEntry }) {
     <InfoTag left="gloss" right={v.gloss} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
     <InfoTag left="part" right={v.part === null ? null : Part[v.part]} generated />
     <InfoTag left="ipa" right={v.ipa} generated />
+    <InfoTag left="disp" right={v.disp} generated />
     <InfoSection title="meanings">
       {v.meanings.map((m, mi) => <InfoSection title={`[${mi}]`} key={m.hash}>
         <MeaningData v={m} />
