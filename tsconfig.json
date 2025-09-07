@@ -2,11 +2,11 @@
   "compilerOptions": {
     "strict": true,
     "sourceMap": true,
-    "module": "esnext",
+    "module": "node16",
     "target": "es2021",
     "jsx": "react-jsx",
     "outDir": "build/",
-    "moduleResolution": "node10",
+    "moduleResolution": "node16",
     "baseUrl": "./src",
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "noErrorTruncation": true
