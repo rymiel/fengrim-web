@@ -80,7 +80,7 @@ export class SyllableInstance {
         .map((phrase) =>
           phrase
             .replaceAll(/\s+/g, " ") // squeeze
-            .replace(/^-/, "") // prefix hyphen
+            .replace(/^-|-$/, "") // affix hyphen
             .split(/[_ ]/)
             .map(convertWord)
             .join(" "),
