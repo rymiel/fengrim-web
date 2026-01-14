@@ -8,25 +8,29 @@ import { SyllableConfig, SyllableInstance } from "./word";
 export function transformConfig(config: ApiConfig): LangConfigData {
   // TODO: actual api
 
-  const soundChange = new SoundChangeInstance(SOUND_CHANGE_CONFIG);
   const generation = new GenerationInstance(config.generation as GenerationConfig);
   const syllable = new SyllableInstance(SYLLABLE_CONFIG);
+  const soundChange = new SoundChangeInstance(SOUND_CHANGE_CONFIG, syllable);
   const abbreviations = config.abbr as KeyValue;
   const parts = config.parts as KeyValue;
-  const ipa = (sentence: string) => syllable.ipa(sentence);
+  const ipa = (sentence: string) => soundChange.soundChangeSentence(sentence);
   const script = () => "no script :("; //TODO
 
   return { soundChange, generation, syllable, abbreviations, parts, ipa, script, config };
 }
 
 const SOUND_CHANGE_CONFIG: SoundChangeConfig = {
-  vowel: "",
-  unromanize: {
-    pre: [],
-    post: [],
-  },
-  clusters: [],
-  changes: [],
+  vowel: "aeiouɛɔɨɤɪʊ",
+  changes: [
+    ["s", "j", null, "{T}\\.{C}"],
+    ["p", "f", null, "{T}\\.{C}"],
+    ["t", "s", null, "{T}\\.{C}"],
+    ["k", "h", null, "{T}\\.{C}"],
+    ["i", "ɨ", null, "{T}$"],
+    ["e", "ɤ", null, "{T}$"],
+    ["ɛ", "ɛɪ", null, "{T}$"],
+    ["ɔ", "ɔʊ", null, "{T}$"],
+  ],
 };
 
 const SYLLABLE_CONFIG: SyllableConfig = {

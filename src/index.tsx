@@ -12,6 +12,7 @@ import EditWordPage from "page/EditWordPage";
 import GeneratePage from "page/GeneratePage";
 import NewWordPage from "page/NewWordPage";
 import ReversePage from "page/ReversePage";
+import SoundChangePage from "page/SoundChangePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import WordPage from "page/WordPage";
@@ -80,6 +81,12 @@ const router = createBrowserRouter([
         path: "/config",
         element: <UserOnly error>
           <ConfigPage />
+        </UserOnly>,
+      },
+      {
+        path: "/sound_changes",
+        element: <UserOnly error>
+          <SoundChangePage />
         </UserOnly>,
       },
     ],

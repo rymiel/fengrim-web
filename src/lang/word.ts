@@ -22,7 +22,7 @@ function syllableToIPA(syll: Syllable) {
   return `${syll.initial?.[1] ?? ""}${syll.vowel[1]}${syll.final?.[1] ?? ""}${syll.tone[2]}`;
 }
 
-function syllablesToIPA(sylls: Syllable[]) {
+export function syllablesToIPA(sylls: Syllable[]) {
   return sylls.map(syllableToIPA).join(".");
 }
 
@@ -30,6 +30,20 @@ const ipaMappingRoman = (m: IPAMapping | string): string => (typeof m === "strin
 
 function regexGroup(s: readonly (IPAMapping | string)[]): string {
   return `(?:${s.map(ipaMappingRoman).join("|")})`;
+}
+
+export function sentenceConvert(sentence: string, convertWord: (word: string) => string): string {
+  return sentence
+    .split(/[,.?!]+/g)
+    .map((phrase) =>
+      phrase
+        .replaceAll(/\s+/g, " ") // squeeze
+        .replace(/^-|-$/, "") // affix hyphen
+        .split(/[_ ]/)
+        .map(convertWord)
+        .join(" "),
+    )
+    .join(" | "); // minor prosodic break
 }
 
 export class SyllableInstance {
@@ -51,7 +65,7 @@ export class SyllableInstance {
     console.log(this.#regex);
   }
 
-  public mapIpaMapping(match: string | undefined, mapping: readonly IPAMapping[]): IPAMapping | undefined {
+  private mapIpaMapping(match: string | undefined, mapping: readonly IPAMapping[]): IPAMapping | undefined {
     if (match === "" || match === undefined) return undefined;
     return mapping.find(([r]) => r === match) ?? INVALID;
   }
@@ -73,21 +87,7 @@ export class SyllableInstance {
 
   public ipa(sentence: string): string {
     const convertWord = (word: string) => syllablesToIPA(this.syllabify(word));
-    return (
-      "/" +
-      sentence
-        .split(/[,.?!]+/g)
-        .map((phrase) =>
-          phrase
-            .replaceAll(/\s+/g, " ") // squeeze
-            .replace(/^-|-$/, "") // affix hyphen
-            .split(/[_ ]/)
-            .map(convertWord)
-            .join(" "),
-        )
-        .join(" | ") + // minor prosodic break
-      "/"
-    );
+    return "/" + sentenceConvert(sentence, convertWord) + "/";
   }
 
   get config(): Readonly<SyllableConfig> {

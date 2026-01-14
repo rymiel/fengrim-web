@@ -33,6 +33,7 @@ export const AppToaster = (): Promise<Toaster> => {
 declare const WEB_VERSION: string;
 
 export const toastErrorHandler = async (error: unknown): Promise<string> => {
+  console.error(error);
   const toaster = await AppToaster();
   if (error instanceof CustomApiError) {
     return toaster.show({ intent: Intent.DANGER, message: `${error.status}: ${error.message}` });

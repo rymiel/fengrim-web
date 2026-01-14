@@ -13,14 +13,12 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { partOfExtra } from "lang/extra";
-import { SyllableInstance } from "lang/word";
 import { Dictionary } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
+import { LangConfig, LangConfigData } from "providers/langConfig";
 import { API, LANGUAGE } from "api";
 
-function Editor({ syllable }: { syllable: SyllableInstance }) {
+function Editor({ lang }: { lang: LangConfigData }) {
   const dict = useContext(Dictionary);
-  const lang = useContext(LangConfig);
   const navigate = useNavigate();
   const [sol, setSol] = useState("");
   const [extra, setExtra] = useState("");
@@ -50,7 +48,7 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
         fill
       >
         <option value="">Extra</option>
-        {Object.entries(lang?.parts ?? {}).map(([k, v]) => {
+        {Object.entries(lang.parts).map(([k, v]) => {
           return <option key={k} value={k}>
             {v}
           </option>;
@@ -58,7 +56,7 @@ function Editor({ syllable }: { syllable: SyllableInstance }) {
       </HTMLSelect>
       <InputGroup onValueChange={setEng} placeholder="Translation" />
       <InputGroup onValueChange={setGloss} placeholder="Gloss" />
-      <span>{syllable.ipa(sol)}</span>
+      <span>{lang.ipa(sol)}</span>
       <Button fill intent="success" text="Submit" onClick={submit} />
     </ControlGroup>
     {!valid && part !== null && <Tag size="large" intent="danger">
@@ -78,7 +76,7 @@ export default function NewWordPage() {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
     return <div className="inter">
-      <Editor syllable={lang.syllable} />
+      <Editor lang={lang} />
     </div>;
   }
 }
