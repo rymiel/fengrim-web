@@ -3,6 +3,7 @@ import {
   CheckboxCard,
   Code,
   ControlGroup,
+  Divider,
   FormGroup,
   HTMLTable,
   InputGroup,
@@ -98,6 +99,8 @@ function StepList({ steps }: { steps: string[] }) {
 }
 
 type MakeLocalSoundChange = (changes: readonly Change[]) => SoundChangeInstance;
+
+// TODO: move to conlang-web-components
 function Content({
   entries,
   soundChange,
@@ -182,6 +185,7 @@ function Content({
           </>
         )}
       </span>)}
+      <Divider />
       <Button text="Add rule" intent="success" fill onClick={newRule} />
       <Button text="Forget changes" intent="danger" fill onClick={clearInstance} />
       <Button text="Save config" intent="primary" fill onClick={saveConfig} loading={loading} />

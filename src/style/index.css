@@ -418,6 +418,10 @@ span.edit {
   flex: 1 fit-content;
 }
 
+.sound-change .rules button {
+  margin-right: 0.4rem;
+}
+
 .sound-change .changes {
   margin: auto;
 }
