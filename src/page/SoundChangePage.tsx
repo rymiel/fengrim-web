@@ -2,15 +2,15 @@ import {
   Button,
   CheckboxCard,
   Code,
-  ControlGroup,
   Divider,
   FormGroup,
+  H3,
   HTMLTable,
-  InputGroup,
   NonIdealState,
   Spinner,
   SpinnerSize,
   Tag,
+  TextArea,
 } from "@blueprintjs/core";
 import { useTitle } from "conlang-web-components";
 import { ReactNode, useContext, useState } from "react";
@@ -113,44 +113,30 @@ function Content({
   const [changes, setChanges] = useState(soundChange.config.changes);
   const [localInstance, setLocalInstance] = useState<SoundChangeInstance | null>(null);
   const [ignoreNoChanges, setIgnoreNoChanges] = useState(false);
-  const [editing, setEditing] = useState<number | null>(null);
-  const [rule, setRule] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [rules, setRules] = useState("");
   const [loading, setLoading] = useState(false);
   const { refresh } = useContext(Dictionary);
 
   const clearInstance = () => {
     setLocalInstance(null);
+    setEditing(false);
     setChanges(soundChange.config.changes);
   };
 
-  const newRule = () => {
-    const idx = changes.length;
-    setChanges((changes) => [...changes, ["", "", null, null]]);
-    setEditing(idx);
-  };
-
-  const startEditing = (i: number) => {
-    const change = changes[i];
-    setEditing(i);
-    setRule(soundChangeToString(change));
+  const startEditing = () => {
+    setEditing(true);
+    setRules(changes.map(soundChangeToString).join("\n"));
   };
 
   const finishEditing = () => {
-    if (editing === null) return;
-    const change = changes[editing];
-    setEditing(null);
-    setRule("");
-    if (soundChangeToString(change) === rule) return;
-    setChanges((changes) => {
-      let newChanges;
-      if (rule === "") {
-        newChanges = changes.filter((_, i) => i !== editing);
-      } else {
-        newChanges = changes.map((c, i) => (i === editing ? soundChangeFromString(rule) : c));
-      }
-      setLocalInstance(makeLocal(newChanges));
-      return newChanges;
-    });
+    setEditing(false);
+    setRules("");
+    const before = changes.map(soundChangeToString).join("\n");
+    if (before === rules) return;
+    const newChanges = rules.split("\n").map(soundChangeFromString);
+    setLocalInstance(makeLocal(newChanges));
+    setChanges(newChanges);
   };
 
   const saveConfig = () => {
@@ -172,31 +158,35 @@ function Content({
 
   return <div className="sound-change">
     <div className="rules">
-      {changes.map((c, i) => <span key={i}>
-        {i == editing ? (
-          <ControlGroup>
-            <Button icon="tick" intent="success" onClick={finishEditing} />
-            <InputGroup onValueChange={setRule} value={rule} fill />
-          </ControlGroup>
-        ) : (
-          <>
-            <Button icon="edit" onClick={() => startEditing(i)} />
-            <SoundChange change={c} />
-            <br />
-          </>
-        )}
-      </span>)}
+      {editing ? (
+        <TextArea fill autoResize onChange={(e) => setRules(e.currentTarget.value)} value={rules} />
+      ) : (
+        changes.map((c, i) => <span key={i}>
+          <SoundChange change={c} />
+          <br />
+        </span>)
+      )}
       <Divider />
-      <Button text="Add rule" intent="success" fill onClick={newRule} />
-      <Button text="Forget changes" intent="danger" fill onClick={clearInstance} />
-      <Button text="Save config" intent="primary" fill onClick={saveConfig} loading={loading} />
+      {editing ? (
+        <Button text="Save changes" icon="tick" intent="success" fill onClick={finishEditing} />
+      ) : (
+        <Button text="Edit rules" icon="edit" fill onClick={startEditing} />
+      )}
+      {localInstance !== null && <>
+        <Button text="Forget changes" icon="trash" intent="danger" fill onClick={clearInstance} />
+        <Button text="Save config" icon="cloud-upload" intent="primary" fill onClick={saveConfig} loading={loading} />
+      </>}
     </div>
     <div className="changes">
-      <FormGroup>
-        <CheckboxCard compact onChange={(e) => setIgnoreNoChanges(e.currentTarget.checked)}>
-          Ignore <i>no changes</i>
-        </CheckboxCard>
-      </FormGroup>
+      {localInstance === null ? (
+        <FormGroup>
+          <CheckboxCard compact onChange={(e) => setIgnoreNoChanges(e.currentTarget.checked)}>
+            Ignore <i>no changes</i>
+          </CheckboxCard>
+        </FormGroup>
+      ) : (
+        <H3>Viewing differences</H3>
+      )}
       <HTMLTable compact striped>
         <thead>
           <tr>
