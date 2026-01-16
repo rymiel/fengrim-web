@@ -2,23 +2,24 @@ import {
   Button,
   CheckboxCard,
   Code,
+  ControlGroup,
   FormGroup,
   HTMLTable,
+  InputGroup,
   NonIdealState,
   Spinner,
   SpinnerSize,
   Tag,
-  TextArea,
 } from "@blueprintjs/core";
 import { useTitle } from "conlang-web-components";
 import { ReactNode, useContext, useState } from "react";
 import reactStringReplace from "react-string-replace";
 
 import { Change, SoundChangeInstance } from "lang/soundChange";
-import { SyllableInstance } from "lang/word";
 import { Dictionary, FullEntry } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
-import { AppToaster } from "App";
+import { API } from "api";
+import { AppToaster, toastErrorHandler } from "App";
 
 function intersperse(arr: ReactNode[], w: ReactNode): ReactNode[] {
   const out: ReactNode[] = [];
@@ -60,18 +61,18 @@ function soundChangeToString(change: Change): string {
   from = from === "" ? "∅" : from;
   to = to === "" ? "∅" : to;
   if (left === null && right === null) {
-    return `${from} → ${to}`;
+    return `${from} -> ${to}`;
   } else {
     left = left === null ? "" : ` ${left}`;
     right = right === null ? "" : ` ${right}`;
-    return `${from} → ${to} /${left} _${right}`;
+    return `${from} -> ${to} /${left} _${right}`;
   }
 }
 
 function soundChangeFromString(s: string): Change {
   const [action, context] = s.split("/").map((i) => i.trim()) as [string, string?];
   const [from, to] = action
-    .split("→")
+    .split("->")
     .map((i) => i.trim())
     .map((i) => (i === "∅" ? "" : i));
   let left = null;
@@ -96,57 +97,96 @@ function StepList({ steps }: { steps: string[] }) {
   );
 }
 
+type MakeLocalSoundChange = (changes: readonly Change[]) => SoundChangeInstance;
 function Content({
   entries,
   soundChange,
-  syll,
+  makeLocal,
 }: {
   entries: FullEntry[];
   soundChange: SoundChangeInstance;
-  syll: SyllableInstance;
+  makeLocal: MakeLocalSoundChange;
 }) {
-  const [rules, setRules] = useState(soundChange.config.changes.map(soundChangeToString).join("\n"));
   const [changes, setChanges] = useState(soundChange.config.changes);
   const [localInstance, setLocalInstance] = useState<SoundChangeInstance | null>(null);
   const [ignoreNoChanges, setIgnoreNoChanges] = useState(false);
-
-  const onChange = (text: string) => {
-    setRules(text);
-    setChanges(text.trim().split("\n").map(soundChangeFromString));
-  };
-
-  const makeInstance = () => {
-    setLocalInstance(new SoundChangeInstance({ ...soundChange.config, changes: changes }, syll));
-  };
+  const [editing, setEditing] = useState<number | null>(null);
+  const [rule, setRule] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { refresh } = useContext(Dictionary);
 
   const clearInstance = () => {
     setLocalInstance(null);
-    setRules(soundChange.config.changes.map(soundChangeToString).join("\n"));
     setChanges(soundChange.config.changes);
   };
 
-  const copyRules = () => {
-    navigator.clipboard
-      .writeText(JSON.stringify(changes))
-      .then(() => AppToaster().then((toaster) => toaster.show({ intent: "success", message: "Copied to clipboard" })));
+  const newRule = () => {
+    const idx = changes.length;
+    setChanges((changes) => [...changes, ["", "", null, null]]);
+    setEditing(idx);
   };
 
-  return <div className="flex-row">
-    <div>
-      <div className="flex-row">
-        <div>
-          {changes.map((c, i) => <span key={i}>
+  const startEditing = (i: number) => {
+    const change = changes[i];
+    setEditing(i);
+    setRule(soundChangeToString(change));
+  };
+
+  const finishEditing = () => {
+    if (editing === null) return;
+    const change = changes[editing];
+    setEditing(null);
+    setRule("");
+    if (soundChangeToString(change) === rule) return;
+    setChanges((changes) => {
+      let newChanges;
+      if (rule === "") {
+        newChanges = changes.filter((_, i) => i !== editing);
+      } else {
+        newChanges = changes.map((c, i) => (i === editing ? soundChangeFromString(rule) : c));
+      }
+      setLocalInstance(makeLocal(newChanges));
+      return newChanges;
+    });
+  };
+
+  const saveConfig = () => {
+    const newConfig = { ...soundChange.config, changes: changes };
+    setLoading(true);
+    API.lang<string>(`/config/sound_change`, "POST", JSON.stringify(newConfig))
+      .then(() => {
+        AppToaster().then((toaster) => toaster.show({ intent: "success", message: "Saved" }));
+        refresh();
+      })
+      .catch((err) => {
+        toastErrorHandler(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return <div className="sound-change">
+    <div className="rules">
+      {changes.map((c, i) => <span key={i}>
+        {i == editing ? (
+          <ControlGroup>
+            <Button icon="tick" intent="success" onClick={finishEditing} />
+            <InputGroup onValueChange={setRule} value={rule} fill />
+          </ControlGroup>
+        ) : (
+          <>
+            <Button icon="edit" onClick={() => startEditing(i)} />
             <SoundChange change={c} />
             <br />
-          </span>)}
-        </div>
-        <TextArea style={{ minWidth: "300px" }} onChange={(e) => onChange(e.currentTarget.value)} value={rules} />
-      </div>
-      <Button text="Test changes" intent="success" fill onClick={makeInstance} />
+          </>
+        )}
+      </span>)}
+      <Button text="Add rule" intent="success" fill onClick={newRule} />
       <Button text="Forget changes" intent="danger" fill onClick={clearInstance} />
-      <Button text="Copy rules" intent="primary" fill onClick={copyRules} />
+      <Button text="Save config" intent="primary" fill onClick={saveConfig} loading={loading} />
     </div>
-    <div className="margin-auto">
+    <div className="changes">
       <FormGroup>
         <CheckboxCard compact onChange={(e) => setIgnoreNoChanges(e.currentTarget.checked)}>
           Ignore <i>no changes</i>
@@ -209,8 +249,10 @@ export default function SoundChangePage() {
   if (entries === null || lang === null) {
     content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
+    const makeLocal = (changes: readonly Change[]) =>
+      new SoundChangeInstance({ ...lang.soundChange.config, changes: changes }, lang.syllable);
     content = <div className="inter">
-      <Content entries={entries} soundChange={lang.soundChange} syll={lang.syllable} />
+      <Content entries={entries} soundChange={lang.soundChange} makeLocal={makeLocal} />
     </div>;
   }
 

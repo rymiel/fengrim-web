@@ -138,16 +138,6 @@ header .bp6-divider {
   font-variant-caps: small-caps;
 }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.margin-auto {
-  margin: auto;
-  margin-top: 2rem;
-}
-
 .bp6-callout.bp6-compact.edit-section {
   width: fit-content;
   margin-top: 10px;
@@ -416,4 +406,18 @@ span.edit {
 .inter.middle {
   width: fit-content;
   margin: 0 auto;
+}
+
+.sound-change {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sound-change .rules {
+  flex: 1 fit-content;
+}
+
+.sound-change .changes {
+  margin: auto;
 }
