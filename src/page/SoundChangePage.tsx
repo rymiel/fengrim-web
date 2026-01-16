@@ -159,6 +159,7 @@ function Content({
     API.lang<string>(`/config/sound_change`, "POST", JSON.stringify(newConfig))
       .then(() => {
         AppToaster().then((toaster) => toaster.show({ intent: "success", message: "Saved" }));
+        setLocalInstance(null);
         refresh();
       })
       .catch((err) => {
