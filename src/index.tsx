@@ -111,4 +111,8 @@ function Wrapper() {
   </StrictMode>;
 }
 
+if (document.location.hostname === "localhost") {
+  document.getElementById("root")!.classList.add("localhost");
+}
+
 createRoot(document.getElementById("root")!).render(<Wrapper />);

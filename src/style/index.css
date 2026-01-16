@@ -99,6 +99,11 @@ footer {
   background-color: #452798;
 }
 
+#root.localhost header,
+#root.localhost footer {
+  background-color: #985e27;
+}
+
 header {
   padding-top: 4px;
   position: sticky;
