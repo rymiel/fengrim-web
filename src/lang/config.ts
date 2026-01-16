@@ -10,7 +10,7 @@ export function transformConfig(config: ApiConfig): LangConfigData {
 
   const generation = new GenerationInstance(config.generation as GenerationConfig);
   const syllable = new SyllableInstance(SYLLABLE_CONFIG);
-  const soundChange = new SoundChangeInstance(SOUND_CHANGE_CONFIG, syllable);
+  const soundChange = new SoundChangeInstance(config.sound_change as SoundChangeConfig, syllable);
   const abbreviations = config.abbr as KeyValue;
   const parts = config.parts as KeyValue;
   const ipa = (sentence: string) => soundChange.soundChangeSentence(sentence);
@@ -18,20 +18,6 @@ export function transformConfig(config: ApiConfig): LangConfigData {
 
   return { soundChange, generation, syllable, abbreviations, parts, ipa, script, config };
 }
-
-const SOUND_CHANGE_CONFIG: SoundChangeConfig = {
-  vowel: "aeiouɛɔɨɤɪʊ",
-  changes: [
-    ["s", "j", null, "{T}\\.{C}"],
-    ["p", "f", null, "{T}\\.{C}"],
-    ["t", "s", null, "{T}\\.{C}"],
-    ["k", "h", null, "{T}\\.{C}"],
-    ["i", "ɨ", null, "{T}$"],
-    ["e", "ɤ", null, "{T}$"],
-    ["ɛ", "ɛɪ", null, "{T}$"],
-    ["ɔ", "ɔʊ", null, "{T}$"],
-  ],
-};
 
 const SYLLABLE_CONFIG: SyllableConfig = {
   consonant: [
