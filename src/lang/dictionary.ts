@@ -25,10 +25,11 @@ export function transformDictionary(lang: LangConfigData, d: ApiDictionary): Ful
     .map((word) => {
       const part = partOfExtra(word.extra);
       const ipa = lang.ipa(word.sol);
+      const phon = lang.syllable.ipa(word.sol);
       const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
       const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
       const disp = displayWord(word);
-      return { ...word, part, ipa, sections, meanings, disp };
+      return { ...word, part, ipa, phon, sections, meanings, disp };
     })
     .sort(entrySort);
   return mWords.map((word, idx) => {

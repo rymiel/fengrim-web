@@ -5,7 +5,10 @@ import { Part } from "lang/extra";
 
 export interface FullEntry extends Omit<ApiWord, "meanings" | "sections"> {
   part: Part | null;
+  /** Phonetic IPA transcription (narrow) [ ... ] */
   ipa: string;
+  /** Phonemic IPA transcription (broad) / ... / */
+  phon: string;
   link: string;
   disp: string;
   index: number;
