@@ -35,6 +35,7 @@ import { useParams } from "react-router-dom";
 import { Part } from "lang/extra";
 import { Dictionary, FullEntry, FullMeaning, FullSection } from "providers/dictionary";
 import { API, LANGUAGE } from "api";
+import { AppToaster } from "App";
 
 export enum SectionTitle {
   TRANSLATION = "translation",
@@ -231,6 +232,53 @@ function SectionEditor({ to, as, name, form, preview, data }: SectionEditorProps
   </div>;
 }
 
+// TODO: move to conlang-web-components (and reuse its splitIntoWords and stuff)
+function interlinearToObsidian(data: InterlinearData): string {
+  let eng = data.eng.replaceAll("*", "");
+  if (eng.at(0) === "“" && eng.at(-1) === "”") eng = eng.slice(1, -1);
+  return [
+    "```gloss",
+    `\\ex ${data.sol.replaceAll("*", "")}`,
+    `\\gla ${data.solSep}`,
+    `\\glb ${data.engSep}`,
+    `\\ft ${eng}`,
+    "```",
+  ].join("\n");
+}
+
+function italicize(s: string, bold: string, norm: string): string {
+  return s
+    .split(/([\u201c\u201d() -])/)
+    .map((i) => (i.trim().length === 0 ? i : i.startsWith("*") ? `${bold}${i.slice(1)}${bold}` : `${norm}${i}${norm}`))
+    .join("")
+    .replaceAll(/(?<!\*)\* \*(?!\*)/g, " ");
+}
+
+function interlinearToReddit(data: InterlinearData): string {
+  const solParts = data.solSep.split(" ");
+  const engParts = data.engSep.split(" ");
+  const boxes: number[] = [];
+  for (let i = 0; i < Math.max(solParts.length, engParts.length); i++) {
+    const s = solParts[i] ?? "";
+    const e = engParts[i] ?? "";
+    boxes[i] = Math.max(s.length, e.length);
+  }
+  return [
+    italicize(data.sol, "***", "*"),
+    "",
+    "    " + solParts.map((s, i) => s.padEnd(boxes[i])).join(" "),
+    "    " + engParts.map((s, i) => s.padEnd(boxes[i])).join(" "),
+    "",
+    italicize(data.eng, "**", ""),
+  ].join("\n");
+}
+
+async function copyToClipboard(content: string): Promise<void> {
+  await navigator.clipboard.writeText(content);
+  const toaster = await AppToaster();
+  toaster.show({ intent: "success", message: "Copied to clipboard" });
+}
+
 function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: string; existing?: InterlinearData }) {
   const [sol, setSol] = useState(existing?.sol ?? "");
   const [solSep, setSolSep] = useState(existing?.solSep ?? "");
@@ -256,7 +304,13 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
     <InputGroup onValueChange={setEngSep} value={engSep} placeholder="Interlinearised translation" />
     <InputGroup onValueChange={setEng} value={eng} placeholder="Translation" />
   </>;
-  const preview = <InterlinearGloss data={data} asterisk />;
+  const copyObsidian = () => copyToClipboard(interlinearToObsidian(data));
+  const copyReddit = () => copyToClipboard(interlinearToReddit(data));
+  const preview = <>
+    <Button fill icon="export" text="Export as Obsidian" onClick={copyObsidian} />
+    <Button fill icon="export" text="Export as Reddit" onClick={copyReddit} />
+    <InterlinearGloss data={data} asterisk />
+  </>;
 
   return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
 }
