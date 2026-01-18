@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   Checkbox,
   Classes,
   Code,
@@ -29,7 +30,7 @@ import {
   useTitle,
   WordSelect,
 } from "conlang-web-components";
-import { ReactElement, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { PropsWithChildren, ReactElement, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Part } from "lang/extra";
@@ -190,9 +191,10 @@ type SectionEditorProps = {
   name: string;
   form: ReactNode;
   preview: ReactNode;
+  buttons?: ReactNode;
   data: () => { title: string; content: string };
 };
-function SectionEditor({ to, as, name, form, preview, data }: SectionEditorProps) {
+function SectionEditor({ to, as, name, form, preview, buttons, data }: SectionEditorProps) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
 
@@ -225,7 +227,10 @@ function SectionEditor({ to, as, name, form, preview, data }: SectionEditorProps
       Editing {name} section <Code>{as}</Code>.
     </p>}
     {form}
-    <Button fill intent="success" text="Submit" onClick={doSubmit} />
+    <ButtonGroup fill>
+      {buttons}
+      <Button fill intent="success" text="Submit" onClick={doSubmit} />
+    </ButtonGroup>
     <Divider />
     {preview}
     {as && <Button fill className="bottom" intent="danger" icon="trash" text="Delete entry" onClick={doDelete} />}
@@ -315,6 +320,43 @@ function TranslationSectionEditor({ to, as, existing }: { to?: string; as?: stri
   return <SectionEditor to={to} as={as} name="translation" form={form} preview={preview} data={createData} />;
 }
 
+function TelephoneGameHelper({ children, onSelect }: PropsWithChildren<{ onSelect: (s: string) => void }>) {
+  const [rein, setRein] = useState(false);
+  const [langName, setLangName] = useState("");
+  const [word, setWord] = useState("");
+  const [author, setAuthor] = useState("");
+  const [link, setLink] = useState("");
+
+  const linkRe = /^.*reddit\.com\/r\/conlangs\/comments\/(\w+)\/biweekly_telephone_game_v3_(\d+)\/(\w+).*$/;
+  const linkSub = link.replace(linkRe, "https://old.reddit.com/r/conlangs/comments/$1/-/$3/?context=10000");
+  const match = link.match(linkRe);
+  const n = match?.[2];
+
+  const authorLink = `https://old.reddit.com/u/${author}`;
+  const base = `${langName} "${word}" by [/u/${author}](${authorLink}), via [Telephone Game #${n}](${linkSub})`;
+  const template = rein
+    ? `Originally from ${base}. Reinterpreted as a native word.`
+    : `From ${base}. Taken as a loanword`;
+
+  return <Popover
+    interactionKind="click"
+    popoverClassName={`${Classes.POPOVER_CONTENT_SIZING} telephone`}
+    placement="bottom"
+    content={
+      <div>
+        <RichText text={template} />
+        <InputGroup value={langName} onValueChange={setLangName} placeholder="Language name" />
+        <InputGroup value={word} onValueChange={setWord} placeholder="Word" />
+        <InputGroup value={author} onValueChange={setAuthor} placeholder="Author" />
+        <InputGroup value={link} onValueChange={setLink} placeholder="Link" />
+        <Checkbox label="Reinterpret as native" checked={rein} onChange={(e) => setRein(e.currentTarget.checked)} />
+        <Button className={Classes.POPOVER_DISMISS} intent="success" text="Apply" onClick={() => onSelect(template)} />
+      </div>
+    }
+    renderTarget={({ isOpen, ...targetProps }) => <div {...targetProps}>{children}</div>}
+  />;
+}
+
 function TextSectionEditor({
   to,
   as,
@@ -329,19 +371,25 @@ function TextSectionEditor({
   const edit = useEditContext();
   const [content, setContent] = useState(existingContent ?? "");
 
-  const createData = () => ({ title, content });
+  const data = () => ({ title, content });
   const form = <ControlGroup fill>
     <TextArea
       onChange={(e) => setContent(e.currentTarget.value)}
       value={content}
       placeholder={`Content for ${title}`}
       fill
+      rows={4}
     />
-    <WordSelect onSelect={(t) => setContent((c) => `${c}[${t.hash}] (“${t.meanings[0]?.eng}”)`)} />
   </ControlGroup>;
+  const buttons = <>
+    <WordSelect onSelect={(t) => setContent((c) => `${c}[${t.hash}] (“${t.meanings[0]?.eng}”)`)} />
+    <TelephoneGameHelper onSelect={(t) => setContent((c) => c + t)}>
+      <Button icon="book" intent="primary" />
+    </TelephoneGameHelper>
+  </>;
   const preview = <RichText text={content} on={edit.page} />;
 
-  return <SectionEditor to={to} as={as} name={`${title} text`} form={form} preview={preview} data={createData} />;
+  return <SectionEditor name={`${title} text`} {...{ to, as, form, preview, data, buttons }} />;
 }
 
 function EntryEditor({ existing }: { existing: FullEntry }) {
