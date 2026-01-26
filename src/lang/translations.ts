@@ -1,0 +1,20 @@
+import { SectionTitle } from "page/EditWordPage";
+import { FullEntry, FullSection } from "providers/dictionary";
+
+export interface Example {
+  readonly entry: FullEntry;
+  readonly nth: number;
+  readonly sections: readonly FullSection[];
+}
+
+export function useExamples(entries: FullEntry[]): Example[] {
+  return entries.flatMap((e) =>
+    e.meanings
+      .map((m, mi) => {
+        const s = m.sections.filter((s) => s.title === SectionTitle.TRANSLATION);
+        if (s.length === 0) return null;
+        return { entry: e, nth: mi + 1, sections: s };
+      })
+      .filter((i) => i !== null),
+  );
+}

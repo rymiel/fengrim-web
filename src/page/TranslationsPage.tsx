@@ -3,27 +3,8 @@ import { InterlinearData, InterlinearGloss, uri, User, useTitle } from "conlang-
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
-
-import { SectionTitle } from "./EditWordPage";
-
-export interface Example {
-  readonly entry: FullEntry;
-  readonly nth: number;
-  readonly sections: readonly FullSection[];
-}
-
-export function useExamples(entries: FullEntry[]): Example[] {
-  return entries.flatMap((e) =>
-    e.meanings
-      .map((m, mi) => {
-        const s = m.sections.filter((s) => s.title === SectionTitle.TRANSLATION);
-        if (s.length === 0) return null;
-        return { entry: e, nth: mi + 1, sections: s };
-      })
-      .filter((i) => i !== null),
-  );
-}
+import { useExamples } from "lang/translations";
+import { Dictionary, FullEntry } from "providers/dictionary";
 
 function Content({ entries }: { entries: FullEntry[] }) {
   const { user } = useContext(User);
@@ -37,7 +18,7 @@ function Content({ entries }: { entries: FullEntry[] }) {
           <Link to={entry.link}>{entry.disp}</Link> ({nth})
         </p>
         <dl>
-          {sections.map((section) => <dd key={section.hash} id={section.hash}>
+          {sections.map((section) => <dd key={section.hash} id={section.hash} className="translation">
             <InterlinearGloss
               data={JSON.parse(section.content) as InterlinearData}
               asterisk
