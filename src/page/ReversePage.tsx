@@ -51,7 +51,7 @@ const ReverseContent = memo(function ReverseContent({
   affixes: Affix[];
   query: string;
 }) {
-  const lookup = useLookup(entries, affixes, query);
+  const lookup = useLookup(entries, affixes)(query);
 
   if (lookupEmpty(lookup)) {
     return <ul>

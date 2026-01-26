@@ -55,23 +55,25 @@ export interface Lookup {
 
 export const lookupEmpty = (lookup: Lookup): boolean => lookup.affix.length === 0 && lookup.terminal.length === 0;
 
-export function useLookup(entries: FullEntry[], affixes: Affix[], query: string): Lookup {
+export function useLookup(entries: FullEntry[], affixes: Affix[]): (query: string) => Lookup {
   const lookup = (q: string, { only }: { only?: Part } = {}): TerminalNode[] =>
     entries.filter((i) => i.sol === q && (only === undefined || i.part === only)).map((e) => ({ entry: e }));
 
-  const terminalNodes = lookup(query);
-  const affixNodes = [];
+  return (query: string) => {
+    const terminalNodes = lookup(query);
+    const affixNodes = [];
 
-  for (const affix of affixes) {
-    if (affix.isSuffix && query.endsWith(affix.raw)) {
-      const cut = query.slice(0, -affix.raw.length);
-      const children = lookup(cut, { only: affix.applies });
-      if (children.length > 0) {
-        affixNodes.push({ original: query, cut, affix, children });
+    for (const affix of affixes) {
+      if (affix.isSuffix && query.endsWith(affix.raw)) {
+        const cut = query.slice(0, -affix.raw.length);
+        const children = lookup(cut, { only: affix.applies });
+        if (children.length > 0) {
+          affixNodes.push({ original: query, cut, affix, children });
+        }
       }
+      // TODO: prefixes
     }
-    // TODO: prefixes
-  }
 
-  return { terminal: terminalNodes, affix: affixNodes };
+    return { terminal: terminalNodes, affix: affixNodes };
+  };
 }
