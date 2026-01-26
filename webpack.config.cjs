@@ -39,6 +39,7 @@ const config = {
     publicPath: "/static/",
   },
   plugins: [
+    // TODO: Can i drop this dependency?
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "index.html"),
       filename: path.join(__dirname, "build", "index.html"),

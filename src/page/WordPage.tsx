@@ -1,8 +1,10 @@
-import { H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
+import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
 import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
-import { useContext, useEffect, useRef } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { Lookup, useAffixes, useLookup } from "lang/reverse";
+import { useExamples } from "lang/translations";
 import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
@@ -46,6 +48,41 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
   </p>;
 }
 
+// TODO: move to its own page?
+function LookupInfo({ entry, entries }: { entry: FullEntry; entries: FullEntry[] }) {
+  const affixes = useAffixes(entries);
+  const lookup = useLookup(entries, affixes);
+  const examples = useExamples(entries);
+  const flattenLookup = (lookup: Lookup) => [
+    ...lookup.terminal.map((t) => t.entry),
+    ...lookup.affix.map((a) => a.affix.entry),
+    ...lookup.affix.flatMap((a) => a.children.map((t) => t.entry)),
+  ];
+  const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
+  const relevant = translations.filter(([_, s]) => {
+    const data = JSON.parse(s.content) as InterlinearData;
+    // TODO: use sol_sep instead for multi-word matches?
+    return data.sol.split(/[?*, -]/).some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
+  });
+  const usages = relevant.map(([e, s, i]) => <Link to={uri`/translations/${s.hash}`} key={s.hash}>
+    {e.entry.disp} {e.nth}. {i}.
+  </Link>);
+  return <>
+    <span>{usages.length} usages found:</span>
+    {usages.map((i, j) => <Fragment key={j}> {i};</Fragment>)}
+  </>;
+}
+
+function LookupButton({ entry }: { entry: FullEntry }) {
+  const { entries } = useContext(Dictionary);
+  const [run, setRun] = useState(false);
+  return run === false || entries === null ? (
+    <Button text="Find usages" intent="primary" onClick={() => setRun(true)} />
+  ) : (
+    <LookupInfo entry={entry} entries={entries} />
+  );
+}
+
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
   const { user } = useContext(User);
   const lang = useContext(LangConfig);
@@ -81,6 +118,7 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
       </li>)}
     </ol>
     {entry.sections.map((s) => <SectionContent key={s.hash} entry={entry} section={s} on={entry.hash} />)}
+    {user && <LookupButton entry={entry} />}
   </>;
 }
 
