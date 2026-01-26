@@ -3,31 +3,41 @@ import { InterlinearData, InterlinearGloss, uri, User, useTitle } from "conlang-
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { Dictionary, FullEntry } from "providers/dictionary";
+import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 
 import { SectionTitle } from "./EditWordPage";
 
-function Content({ entries }: { entries: FullEntry[] }) {
-  const { user } = useContext(User);
-  const examples = entries.flatMap((e) =>
+export interface Example {
+  readonly entry: FullEntry;
+  readonly nth: number;
+  readonly sections: readonly FullSection[];
+}
+
+export function useExamples(entries: FullEntry[]): Example[] {
+  return entries.flatMap((e) =>
     e.meanings
       .map((m, mi) => {
         const s = m.sections.filter((s) => s.title === SectionTitle.TRANSLATION);
         if (s.length === 0) return null;
-        return [e, mi + 1, s] as const;
+        return { entry: e, nth: mi + 1, sections: s };
       })
       .filter((i) => i !== null),
   );
+}
+
+function Content({ entries }: { entries: FullEntry[] }) {
+  const { user } = useContext(User);
+  const examples = useExamples(entries);
 
   return <>
     <p>This page lists all translations from all words with examples sentences in the dictionary.</p>
     <ul>
-      {examples.map(([entry, nth, sections]) => <li key={`${entry.hash}-${nth}`}>
+      {examples.map(({ entry, nth, sections }) => <li key={`${entry.hash}-${nth}`}>
         <p>
           <Link to={entry.link}>{entry.disp}</Link> ({nth})
         </p>
         <dl>
-          {sections.map((section) => <dd key={section.hash}>
+          {sections.map((section) => <dd key={section.hash} id={section.hash}>
             <InterlinearGloss
               data={JSON.parse(section.content) as InterlinearData}
               asterisk
