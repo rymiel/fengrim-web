@@ -78,6 +78,10 @@ const router = createBrowserRouter([
         element: <TranslationsPage />,
       },
       {
+        path: "/translations/:query",
+        element: <TranslationsPage />,
+      },
+      {
         path: "/config",
         element: <UserOnly error>
           <ConfigPage />

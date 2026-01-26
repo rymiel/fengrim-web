@@ -1,13 +1,45 @@
 import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { InterlinearData, InterlinearGloss, uri, User, useTitle } from "conlang-web-components";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import { useExamples } from "lang/translations";
-import { Dictionary, FullEntry } from "providers/dictionary";
+import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 
-function Content({ entries }: { entries: FullEntry[] }) {
+function Translation({
+  entry,
+  section,
+  highlighted,
+}: {
+  entry: FullEntry;
+  section: FullSection;
+  highlighted: boolean;
+}) {
   const { user } = useContext(User);
+  const ref = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (highlighted) {
+      ref.current?.scrollIntoView();
+    }
+  }, [highlighted]);
+
+  return <dd id={section.hash} className={`translation ${highlighted ? "focus" : ""}`} ref={ref}>
+    <InterlinearGloss
+      data={JSON.parse(section.content) as InterlinearData}
+      asterisk
+      link
+      indent
+      extra={
+        user && <span className="edit">
+          [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
+        </span>
+      }
+    />
+  </dd>;
+}
+
+function Content({ entries, query }: { entries: FullEntry[]; query: string | undefined }) {
   const examples = useExamples(entries);
 
   return <>
@@ -18,19 +50,12 @@ function Content({ entries }: { entries: FullEntry[] }) {
           <Link to={entry.link}>{entry.disp}</Link> ({nth})
         </p>
         <dl>
-          {sections.map((section) => <dd key={section.hash} id={section.hash} className="translation">
-            <InterlinearGloss
-              data={JSON.parse(section.content) as InterlinearData}
-              asterisk
-              link
-              indent
-              extra={
-                user && <span className="edit">
-                  [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
-                </span>
-              }
-            />
-          </dd>)}
+          {sections.map((section) => <Translation
+            key={section.hash}
+            entry={entry}
+            section={section}
+            highlighted={query === section.hash}
+          />)}
         </dl>
       </li>)}
     </ul>
@@ -39,13 +64,14 @@ function Content({ entries }: { entries: FullEntry[] }) {
 
 export default function TranslationsPage() {
   const { entries } = useContext(Dictionary);
+  const { query } = useParams();
   useTitle("Translations");
 
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
   if (entries) {
     content = <div className="inter">
-      <Content entries={entries} />
+      <Content entries={entries} query={query} />
     </div>;
   }
 
