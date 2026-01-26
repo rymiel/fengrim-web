@@ -435,3 +435,11 @@ span.edit {
   min-width: 600px;
   max-width: 600px;
 }
+
+.translation {
+  scroll-margin-top: 5rem;
+}
+
+.translation:target .interlinear > .original {
+  background-color: rgba(255, 255, 0, 0.2);
+}
