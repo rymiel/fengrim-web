@@ -1,13 +1,15 @@
-import { FullEntry } from "providers/dictionary";
 import { useMemo } from "react";
+
+import { FullEntry } from "providers/dictionary";
+
 import { Part } from "./extra";
 
 export interface Affix {
-  entry: FullEntry;
-  isSuffix: boolean;
-  isPrefix: boolean;
-  applies: Part | undefined;
-  raw: string;
+  readonly entry: FullEntry;
+  readonly isSuffix: boolean;
+  readonly isPrefix: boolean;
+  readonly applies: Part | undefined;
+  readonly raw: string;
 }
 
 const AFFIX_PARTS = {
@@ -36,19 +38,19 @@ export function useAffixes(entries: FullEntry[]): Affix[] {
 }
 
 export interface TerminalNode {
-  entry: FullEntry;
+  readonly entry: FullEntry;
 }
 
 export interface AffixNode {
-  original: string;
-  cut: string;
-  affix: Affix;
-  children: TerminalNode[];
+  readonly original: string;
+  readonly cut: string;
+  readonly affix: Affix;
+  readonly children: readonly TerminalNode[];
 }
 
 export interface Lookup {
-  terminal: TerminalNode[];
-  affix: AffixNode[];
+  readonly terminal: readonly TerminalNode[];
+  readonly affix: readonly AffixNode[];
 }
 
 export const lookupEmpty = (lookup: Lookup): boolean => lookup.affix.length === 0 && lookup.terminal.length === 0;
