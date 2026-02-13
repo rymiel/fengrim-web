@@ -18,7 +18,7 @@ export interface Syllable {
   tone: Tone;
 }
 
-function syllableToIPA(syll: Syllable) {
+export function syllableToIPA(syll: Syllable) {
   return `${syll.initial?.[1] ?? ""}${syll.vowel[1]}${syll.final?.[1] ?? ""}${syll.tone[2]}`;
 }
 
@@ -32,17 +32,18 @@ function regexGroup(s: readonly (IPAMapping | string)[]): string {
   return `(?:${s.map(ipaMappingRoman).join("|")})`;
 }
 
+export function phraseConvert<T>(phrase: string, convertWord: (word: string) => T): T[] {
+  return phrase
+    .replaceAll(/\s+/g, " ") // squeeze
+    .replace(/^-|-$/, "") // affix hyphen
+    .split(/[_ ]/)
+    .map(convertWord);
+}
+
 export function sentenceConvert(sentence: string, convertWord: (word: string) => string): string {
   return sentence
     .split(/[,.?!]+/g)
-    .map((phrase) =>
-      phrase
-        .replaceAll(/\s+/g, " ") // squeeze
-        .replace(/^-|-$/, "") // affix hyphen
-        .split(/[_ ]/)
-        .map(convertWord)
-        .join(" "),
-    )
+    .map((phrase) => phraseConvert(phrase, convertWord).join(" "))
     .join(" | "); // minor prosodic break
 }
 
@@ -83,6 +84,10 @@ export class SyllableInstance {
         tone,
       };
     });
+  }
+
+  public syllabifyPhraseFlat(phrase: string): Syllable[] {
+    return phraseConvert(phrase, (w) => this.syllabify(w)).flat();
   }
 
   public ipa(sentence: string): string {

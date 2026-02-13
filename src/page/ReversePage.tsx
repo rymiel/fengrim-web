@@ -8,10 +8,7 @@ import { Affix, AffixNode, Lookup, lookupEmpty, TerminalNode, useAffixes, useLoo
 import { Dictionary, FullEntry } from "providers/dictionary";
 
 function TerminalTreeNode({ node: { entry } }: { node: TerminalNode }) {
-  let meaning = entry.meanings[0].eng;
-  if (entry.meanings.length > 1) {
-    meaning += "; ...";
-  }
+  const meaning = entry.meanings.map((m) => m.eng).join("; ");
   const tag = entry.tag === undefined ? undefined : <Tag intent="danger">{entry.tag}</Tag>;
   return <>
     <Link to={entry.link}>
