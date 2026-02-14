@@ -38,20 +38,37 @@ export function useRhymes(): Rhyme[] | null {
 
 export type RhymeMatch = Partial<Rhyme>;
 
-export function rhymeMatchToString(match: RhymeMatch) {
+export function rhymeMatchToString(
+  match: RhymeMatch,
+  { alwaysInitial = false, alwaysFinal = false }: { alwaysInitial?: boolean; alwaysFinal?: boolean } = {},
+): string {
   let initial = match.initial ?? "";
-  if (initial === "∅") initial = "";
+  if (initial === "∅" && !alwaysInitial) initial = "";
   const vowel = match.vowel ?? "";
   const tone = match.tone ?? "";
   let final = match.final ?? "";
-  if (final === "∅") final = "";
-  return `${initial}${vowel}${tone}${final}`;
+  if (final === "∅" && !alwaysFinal) final = "";
+  const hyphen = match.initial === undefined || match.vowel === undefined ? "-" : "";
+  return `${initial}${hyphen}${vowel}${tone}${final}`;
 }
 
-export function rhymeMatches(rhyme: Rhyme, match: RhymeMatch) {
+export function rhymeMatches(rhyme: Rhyme, match: RhymeMatch): boolean {
   if (match.initial !== undefined && match.initial !== rhyme.initial) return false;
   if (match.vowel !== undefined && match.vowel !== rhyme.vowel) return false;
   if (match.tone !== undefined && match.tone !== rhyme.tone) return false;
   if (match.final !== undefined && match.final !== rhyme.final) return false;
   return true;
+}
+
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+export function invertRhymeMatch(rhyme: Rhyme, match: RhymeMatch): Readonly<RhymeMatch> {
+  const out: Mutable<RhymeMatch> = rhyme;
+  if (match.initial !== undefined) delete out.initial;
+  if (match.vowel !== undefined) delete out.vowel;
+  if (match.tone !== undefined) delete out.tone;
+  if (match.final !== undefined) delete out.final;
+  return out;
 }

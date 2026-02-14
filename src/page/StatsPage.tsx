@@ -3,7 +3,7 @@ import { useTitle } from "conlang-web-components";
 import React, { Fragment, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Rhyme, RhymeMatch, rhymeMatches, rhymeMatchToString, syllableToRhyme, useRhymes } from "lang/rhyme";
+import { invertRhymeMatch, Rhyme, RhymeMatch, rhymeMatches, rhymeMatchToString, syllableToRhyme, useRhymes } from "lang/rhyme";
 import { Dictionary, FullEntry } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
 
@@ -130,24 +130,25 @@ function RhymeDialog({ match, close }: { match: RhymeMatch | null; close: () => 
     for (const syll of config.syllable.syllabifyPhraseFlat(entry.sol)) {
       const rhyme = syllableToRhyme(syll);
       if (rhymeMatches(rhyme, match)) {
-        map.set(rhyme.initial, [...(map.get(rhyme.initial) ?? []), entry]);
+        const key = rhymeMatchToString(invertRhymeMatch(rhyme, match), { alwaysInitial: true });
+        map.set(key, [...(map.get(key) ?? []), entry]);
       }
     }
   }
-  const keys = [...map.keys()];
-  const name = rhymeMatchToString(match ?? {});
-  return <Dialog isOpen={match !== null} onClose={() => close()} title={<>Rhymes of -{name}</>}>
+  const keys = [...map.keys()].sort();
+  const name = rhymeMatchToString(match ?? {}, { alwaysFinal: true });
+  return <Dialog isOpen={match !== null} onClose={() => close()} title={<>Rhymes of {name}</>}>
     <DialogBody>
-      <ul>
+      <ol>
         {keys.map((k) => <li key={k}>
-          {k}-
+          {k}
           <ul>
             {map.get(k)?.map((e) => <li key={e.hash}>
               <Link to={e.link}>{e.disp}</Link>
             </li>)}
           </ul>
         </li>)}
-      </ul>
+      </ol>
     </DialogBody>
   </Dialog>;
 }
