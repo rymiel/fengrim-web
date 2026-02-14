@@ -52,11 +52,12 @@ export function rhymeMatchToString(
   return `${initial}${hyphen}${vowel}${tone}${final}`;
 }
 
+const KEYS = ["initial", "vowel", "tone", "final"] as const;
+
 export function rhymeMatches(rhyme: Rhyme, match: RhymeMatch): boolean {
-  if (match.initial !== undefined && match.initial !== rhyme.initial) return false;
-  if (match.vowel !== undefined && match.vowel !== rhyme.vowel) return false;
-  if (match.tone !== undefined && match.tone !== rhyme.tone) return false;
-  if (match.final !== undefined && match.final !== rhyme.final) return false;
+  for (const key of KEYS) {
+    if (match[key] !== undefined && match[key] !== rhyme[key]) return false;
+  }
   return true;
 }
 
@@ -66,9 +67,8 @@ type Mutable<T> = {
 
 export function invertRhymeMatch(rhyme: Rhyme, match: RhymeMatch): Readonly<RhymeMatch> {
   const out: Mutable<RhymeMatch> = rhyme;
-  if (match.initial !== undefined) delete out.initial;
-  if (match.vowel !== undefined) delete out.vowel;
-  if (match.tone !== undefined) delete out.tone;
-  if (match.final !== undefined) delete out.final;
+  for (const key of KEYS) {
+    if (match[key] !== undefined) delete out[key];
+  }
   return out;
 }
