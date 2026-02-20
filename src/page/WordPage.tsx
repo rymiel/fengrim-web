@@ -49,7 +49,7 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
 }
 
 // TODO: move to its own page?
-function useTranslationUsages(entry: FullEntry, entries: FullEntry[]): ReactElement[] {
+function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): ReactElement[] {
   const affixes = useAffixes(entries);
   const lookup = useLookup(entries, affixes);
   const examples = useExamples(entries);
@@ -69,7 +69,7 @@ function useTranslationUsages(entry: FullEntry, entries: FullEntry[]): ReactElem
   </Link>);
 }
 
-function useEtymologyUsages(entry: FullEntry, entries: FullEntry[]): ReactElement[] {
+function useEtymologyUsages(entry: FullEntry, entries: readonly FullEntry[]): ReactElement[] {
   const etymologies = entries.flatMap((e) =>
     e.sections.filter((s) => s.title === SectionTitle.ETYMOLOGY).map((s) => [e, s] as const),
   );
@@ -79,7 +79,7 @@ function useEtymologyUsages(entry: FullEntry, entries: FullEntry[]): ReactElemen
   </Link>);
 }
 
-function LookupInfo({ entry, entries }: { entry: FullEntry; entries: FullEntry[] }) {
+function LookupInfo({ entry, entries }: { entry: FullEntry; entries: readonly FullEntry[] }) {
   const translationUsages = useTranslationUsages(entry, entries);
   const etymologyUsages = useEtymologyUsages(entry, entries);
   const total = translationUsages.length + etymologyUsages.length;

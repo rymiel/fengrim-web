@@ -18,7 +18,7 @@ const AFFIX_PARTS = {
   adjective: Part.Adjective,
 } as const;
 
-export function useAffixes(entries: FullEntry[]): Affix[] {
+export function useAffixes(entries: readonly FullEntry[]): readonly Affix[] {
   return useMemo(
     () =>
       entries
@@ -55,7 +55,7 @@ export interface Lookup {
 
 export const lookupEmpty = (lookup: Lookup): boolean => lookup.affix.length === 0 && lookup.terminal.length === 0;
 
-export function useLookup(entries: FullEntry[], affixes: Affix[]): (query: string) => Lookup {
+export function useLookup(entries: readonly FullEntry[], affixes: readonly Affix[]): (query: string) => Lookup {
   const lookup = (q: string, { only }: { only?: Part } = {}): TerminalNode[] =>
     entries.filter((i) => i.sol === q && (only === undefined || i.part === only)).map((e) => ({ entry: e }));
 

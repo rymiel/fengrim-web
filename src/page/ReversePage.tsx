@@ -44,8 +44,8 @@ const ReverseContent = memo(function ReverseContent({
   affixes,
   query,
 }: {
-  entries: FullEntry[];
-  affixes: Affix[];
+  entries: readonly FullEntry[];
+  affixes: readonly Affix[];
   query: string;
 }) {
   const lookup = useLookup(entries, affixes)(query);
@@ -64,7 +64,7 @@ const ReverseContent = memo(function ReverseContent({
   }
 });
 
-function calculateFormsCount(entries: FullEntry[] | null, affixes: Affix[] | null) {
+function calculateFormsCount(entries: readonly FullEntry[] | null, affixes: readonly Affix[] | null) {
   if (entries === null || affixes === null) {
     return "...";
   }

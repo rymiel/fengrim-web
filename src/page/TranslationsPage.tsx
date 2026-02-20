@@ -39,7 +39,7 @@ function Translation({
   </dd>;
 }
 
-function Content({ entries, query }: { entries: FullEntry[]; query: string | undefined }) {
+function Content({ entries, query }: { entries: readonly FullEntry[]; query: string | undefined }) {
   const examples = useExamples(entries);
 
   return <>

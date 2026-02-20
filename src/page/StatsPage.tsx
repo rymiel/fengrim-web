@@ -3,7 +3,15 @@ import { useTitle } from "conlang-web-components";
 import React, { Fragment, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { invertRhymeMatch, Rhyme, RhymeMatch, rhymeMatches, rhymeMatchToString, syllableToRhyme, useRhymes } from "lang/rhyme";
+import {
+  invertRhymeMatch,
+  Rhyme,
+  RhymeMatch,
+  rhymeMatches,
+  rhymeMatchToString,
+  syllableToRhyme,
+  useRhymes,
+} from "lang/rhyme";
 import { Dictionary, FullEntry } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
 

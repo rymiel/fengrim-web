@@ -25,7 +25,7 @@ export interface FullMeaning extends Omit<ApiMeaning, "sections"> {
 export interface FullSection extends ApiSection {}
 
 interface DictionaryData {
-  entries: FullEntry[] | null;
+  entries: readonly FullEntry[] | null;
   refresh: () => void;
 }
 

@@ -7,7 +7,7 @@ export interface Example {
   readonly sections: readonly FullSection[];
 }
 
-export function useExamples(entries: FullEntry[]): Example[] {
+export function useExamples(entries: readonly FullEntry[]): readonly Example[] {
   return entries.flatMap((e) =>
     e.meanings
       .map((m, mi) => {

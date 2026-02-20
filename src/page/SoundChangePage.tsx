@@ -106,7 +106,7 @@ function Content({
   soundChange,
   makeLocal,
 }: {
-  entries: FullEntry[];
+  entries: readonly FullEntry[];
   soundChange: SoundChangeInstance;
   makeLocal: MakeLocalSoundChange;
 }) {
