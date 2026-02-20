@@ -1,6 +1,6 @@
 import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
 import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { Lookup, useAffixes, useLookup } from "lang/reverse";
@@ -49,7 +49,7 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
 }
 
 // TODO: move to its own page?
-function LookupInfo({ entry, entries }: { entry: FullEntry; entries: FullEntry[] }) {
+function useTranslationUsages(entry: FullEntry, entries: FullEntry[]): ReactElement[] {
   const affixes = useAffixes(entries);
   const lookup = useLookup(entries, affixes);
   const examples = useExamples(entries);
@@ -64,12 +64,31 @@ function LookupInfo({ entry, entries }: { entry: FullEntry; entries: FullEntry[]
     // TODO: use sol_sep instead for multi-word matches?
     return data.sol.split(/[?*, -]/).some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
   });
-  const usages = relevant.map(([e, s, i]) => <Link to={uri`/translations/${s.hash}`} key={s.hash}>
+  return relevant.map(([e, s, i]) => <Link to={uri`/translations/${s.hash}`} key={s.hash}>
     {e.entry.disp} {e.nth}. {i}.
   </Link>);
+}
+
+function useEtymologyUsages(entry: FullEntry, entries: FullEntry[]): ReactElement[] {
+  const etymologies = entries.flatMap((e) =>
+    e.sections.filter((s) => s.title === SectionTitle.ETYMOLOGY).map((s) => [e, s] as const),
+  );
+  const relevant = etymologies.filter(([_, s]) => s.content.includes(entry.hash));
+  return relevant.map(([e, s]) => <Link to={e.link} key={s.hash}>
+    {e.disp} etym.
+  </Link>);
+}
+
+function LookupInfo({ entry, entries }: { entry: FullEntry; entries: FullEntry[] }) {
+  const translationUsages = useTranslationUsages(entry, entries);
+  const etymologyUsages = useEtymologyUsages(entry, entries);
+  const total = translationUsages.length + etymologyUsages.length;
   return <>
-    <span>{usages.length} usages found:</span>
-    {usages.map((i, j) => <Fragment key={j}> {i};</Fragment>)}
+    <span>
+      {total} usage{total === 1 ? "" : "s"} found:
+    </span>
+    {translationUsages.map((i, j) => <Fragment key={j}> {i};</Fragment>)}
+    {etymologyUsages.map((i, j) => <Fragment key={j}> {i};</Fragment>)}
   </>;
 }
 
