@@ -12,7 +12,7 @@ export default function IdPage() {
   if (entries) {
     const entry = entries.find((e) => e.hash === hash);
     if (entry) {
-      navigate(entry.link);
+      navigate(entry.link, { replace: true });
     } else {
       navigate("/404");
     }
