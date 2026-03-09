@@ -10,6 +10,7 @@ import ConfigPage from "page/ConfigPage";
 import DictionaryPage from "page/DictionaryPage";
 import EditWordPage from "page/EditWordPage";
 import GeneratePage from "page/GeneratePage";
+import IdPage from "page/IdPage";
 import NewWordPage from "page/NewWordPage";
 import ReversePage from "page/ReversePage";
 import SoundChangePage from "page/SoundChangePage";
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/w/:word/:num",
         element: <WordPage />,
+      },
+      {
+        path: "/id/:hash",
+        element: <IdPage />,
       },
       {
         path: "/edit/:hash",
