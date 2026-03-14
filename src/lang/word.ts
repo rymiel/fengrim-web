@@ -1,3 +1,5 @@
+import { phraseConvert, sentenceConvert } from "conlang-web-components";
+
 type IPAMapping = readonly [roman: string, ipa: string];
 type Tone = readonly [diacritic: string, letter: string, ipa: string];
 
@@ -30,21 +32,6 @@ const ipaMappingRoman = (m: IPAMapping | string): string => (typeof m === "strin
 
 function regexGroup(s: readonly (IPAMapping | string)[]): string {
   return `(?:${s.map(ipaMappingRoman).join("|")})`;
-}
-
-export function phraseConvert<T>(phrase: string, convertWord: (word: string) => T): T[] {
-  return phrase
-    .replaceAll(/\s+/g, " ") // squeeze
-    .replace(/^-|-$/, "") // affix hyphen
-    .split(/[_ ]/)
-    .map(convertWord);
-}
-
-export function sentenceConvert(sentence: string, convertWord: (word: string) => string): string {
-  return sentence
-    .split(/[,.?!]+/g)
-    .map((phrase) => phraseConvert(phrase, convertWord).join(" "))
-    .join(" | "); // minor prosodic break
 }
 
 export class SyllableInstance {
