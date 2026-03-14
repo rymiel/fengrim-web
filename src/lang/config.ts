@@ -1,18 +1,26 @@
-import { ApiConfig, GenerationConfig, GenerationInstance, KeyValue } from "conlang-web-components";
+import {
+  ApiConfig,
+  configOrEmpty,
+  DEFAULT_GENERATION,
+  DEFAULT_KEY_VALUE,
+  DEFAULT_SOUND_CHANGE,
+  GenerationInstance,
+  SoundChangeInstance,
+} from "conlang-web-components";
 
 import { LangConfigData } from "providers/langConfig";
 
-import { SoundChangeConfig, SoundChangeInstance } from "./soundChange";
-import { SyllableConfig, SyllableInstance } from "./word";
+import { SyllableConfig, SyllableInstance, syllablesToIPA } from "./word";
 
 export function transformConfig(config: ApiConfig): LangConfigData {
-  // TODO: actual api
-
-  const generation = new GenerationInstance(config.generation as GenerationConfig);
+  const generation = new GenerationInstance(configOrEmpty(config.generation, DEFAULT_GENERATION));
   const syllable = new SyllableInstance(SYLLABLE_CONFIG);
-  const soundChange = new SoundChangeInstance(config.sound_change as SoundChangeConfig, syllable);
-  const abbreviations = config.abbr as KeyValue;
-  const parts = config.parts as KeyValue;
+  const soundChange = new SoundChangeInstance(
+    configOrEmpty(config.sound_change, DEFAULT_SOUND_CHANGE),
+    (word: string) => syllablesToIPA(syllable.syllabify(word)),
+  );
+  const abbreviations = configOrEmpty(config.abbr, DEFAULT_KEY_VALUE);
+  const parts = configOrEmpty(config.parts, DEFAULT_KEY_VALUE);
   const ipa = (sentence: string) => soundChange.soundChangeSentence(sentence);
   const script = () => "no script :("; //TODO
 

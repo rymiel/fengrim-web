@@ -44,6 +44,12 @@ export const toastErrorHandler = async (error: unknown): Promise<string> => {
   }
 };
 
+export const toastSuccessHandler = async (message: string): Promise<string> => {
+  console.info(message);
+  const toaster = await AppToaster();
+  return toaster.show({ intent: Intent.SUCCESS, message });
+};
+
 const MENU_LINKS = [
   ["/", "Home"],
   ["/reverse", "Reverse"],

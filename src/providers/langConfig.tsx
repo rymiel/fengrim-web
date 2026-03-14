@@ -1,7 +1,6 @@
-import { ApiConfig, GenerationInstance, KeyValue } from "conlang-web-components";
+import { ApiConfig, GenerationInstance, KeyValue, SoundChangeInstance } from "conlang-web-components";
 import { createContext } from "react";
 
-import { SoundChangeInstance } from "lang/soundChange";
 import { SyllableInstance } from "lang/word";
 
 export interface LangConfigData {

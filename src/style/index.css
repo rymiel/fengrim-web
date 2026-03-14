@@ -160,17 +160,6 @@ header .bp6-divider {
   flex-shrink: 0;
 }
 
-table.bp6-html-table.bp6-compact.dictionary th,
-table.bp6-html-table.bp6-compact.dictionary td {
-  padding-bottom: 4px;
-  padding-top: 4px;
-  vertical-align: middle;
-}
-
-table.bp6-html-table.bp6-compact.dictionary td.dual * {
-  margin: auto;
-}
-
 table.bp6-html-table.bp6-compact.inflection p {
   margin-bottom: 0;
 }
@@ -268,48 +257,6 @@ h4 .bp6-icon {
   vertical-align: bottom;
 }
 
-.dictionary tr td .bp6-icon {
-  vertical-align: bottom;
-  margin-left: 0.3rem;
-}
-
-.bp6-dark .dictionary td:has(> a.link-fill) {
-  padding: 0;
-  min-height: 34px;
-}
-
-@media (max-width: 690px) {
-  .dictionary td a.link-fill {
-    min-height: 34px;
-  }
-}
-
-@media (max-width: 520px) {
-  .dictionary .pronunciation {
-    display: none;
-  }
-}
-
-.bp6-dark .dictionary a.link-fill {
-  color: inherit;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 4px 11px;
-  align-items: center;
-}
-
-.bp6-dark .dictionary a.link-fill:hover {
-  text-decoration: none;
-}
-
-.around-dictionary {
-  padding: 0.5rem 0;
-  margin: 0.5rem 0;
-  position: sticky;
-  background-color: #252a31;
-}
-
 .bp6-dark a.missing {
   color: #ff4242;
 }
@@ -385,24 +332,6 @@ span.edit {
 .inter.middle {
   width: fit-content;
   margin: 0 auto;
-}
-
-.sound-change {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.sound-change .rules {
-  flex: 1 fit-content;
-}
-
-.sound-change .rules button {
-  margin-right: 0.4rem;
-}
-
-.sound-change .changes {
-  margin: auto;
 }
 
 .bp6-popover.bp6-popover-content-sizing.telephone .bp6-popover-content {

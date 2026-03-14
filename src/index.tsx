@@ -19,8 +19,8 @@ import TranslationsPage from "page/TranslationsPage";
 import WordPage from "page/WordPage";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
-import { API } from "api";
-import { App, toastErrorHandler } from "App";
+import { API, LANGUAGE } from "api";
+import { App, toastErrorHandler, toastSuccessHandler } from "App";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "conlang-web-components/src/style.css";
@@ -112,7 +112,9 @@ function Wrapper() {
         transformConfig={transformConfig}
         api={API}
         error={toastErrorHandler}
+        success={toastSuccessHandler}
         tag="x-elf"
+        language={LANGUAGE}
       >
         <RouterProvider router={router} />
       </ConlangProvider>
