@@ -8,7 +8,7 @@ import {
   SpinnerSize,
   Tag,
 } from "@blueprintjs/core";
-import { uri, User, useTitle } from "conlang-web-components";
+import { ApiMeaning, ApiWord, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -29,12 +29,15 @@ function Editor({ lang }: { lang: LangConfigData }) {
 
   const valid = part !== null;
 
-  const submit = () => {
-    const ex = undefined;
-    API.lang<string>("/entry", "POST", { sol, extra, eng, ex, gloss: gloss === "" ? undefined : gloss }).then((id) => {
-      dict.refresh();
-      navigate(uri`/edit/${id}`);
-    });
+  const submit = async () => {
+    const data = { sol, extra, eng, gloss: gloss === "" ? undefined : gloss };
+    const w = await API.lang<ApiWord>("/word", "POST", {}, data);
+    const meanings = eng
+      .split(";")
+      .map((m) => API.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: m.trim() }));
+    await Promise.all(meanings);
+    dict.refresh();
+    navigate(uri`/edit/${w.hash}`);
   };
 
   return <div className="inter">

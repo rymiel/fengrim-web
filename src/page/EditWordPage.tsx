@@ -58,7 +58,7 @@ function EntryData({ v }: { v: FullEntry }) {
   const dict = useContext(Dictionary);
 
   const doDelete = () => {
-    API.lang(`/entry/${v.hash}`, "DELETE").then(() => {
+    API.lang(`/word/${v.hash}`, "DELETE").then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -192,7 +192,7 @@ type SectionEditorProps = {
   form: ReactNode;
   preview: ReactNode;
   buttons?: ReactNode;
-  data: () => { title: string; content: string };
+  data: () => Omit<FullSection, keyof ApiBase>;
 };
 function SectionEditor({ to, as, name, form, preview, buttons, data }: SectionEditorProps) {
   const edit = useEditContext();
@@ -203,7 +203,7 @@ function SectionEditor({ to, as, name, form, preview, buttons, data }: SectionEd
   }
 
   const doSubmit = () => {
-    API.lang("/section", "POST", { to, as, ...data() }).then(() => {
+    API.lang("/section", "POST", { to, as }, data()).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -402,13 +402,13 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
   const as = existing.hash;
 
   const submit = () => {
-    API.lang("/entry", "POST", {
-      as,
+    const data = {
       sol,
       extra,
       tag: isObsolete ? "obsolete" : undefined,
       gloss: gloss === "" ? undefined : gloss,
-    }).then(() => {
+    };
+    API.lang("/word", "POST", { as }, data).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -439,7 +439,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 
   const doSubmit = () => {
     const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
-    API.lang("/meaning", "POST", { to, as, eng }).then(() => {
+    API.lang("/meaning", "POST", { to, as }, { eng }).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
