@@ -18,6 +18,7 @@ export function transformConfig(config: ApiConfig): LangConfigData {
   const soundChange = new SoundChangeInstance(
     configOrEmpty(config.sound_change, DEFAULT_SOUND_CHANGE),
     (word: string) => syllablesToIPA(syllable.syllabify(word)),
+    (word: string) => word,
   );
   const abbreviations = configOrEmpty(config.abbr, DEFAULT_KEY_VALUE);
   const parts = configOrEmpty(config.parts, DEFAULT_KEY_VALUE);
