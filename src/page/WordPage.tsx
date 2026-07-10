@@ -1,5 +1,7 @@
 import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { OldInterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
+// TODO: technically not properly exported, needs more permanent API after refactor is complete.
+import { coalesceInterlinearData } from "conlang-web-components/build/components/interlinear";
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -59,10 +61,9 @@ function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): 
   ];
   const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
   const relevant = translations.filter(([_, s]) => {
-    // TODO: use new translation content type
-    const data = JSON.parse(s.content) as OldInterlinearData;
-    // TODO: use sol_sep instead for multi-word matches?
-    return data.sol.split(/[?*, -]/).some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
+    const { srcParts } = coalesceInterlinearData(s.content);
+    // TODO: use srcWords instead for multi-word matches?
+    return srcParts.some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
   });
   return relevant.map(([e, s, i]) => <Link to={uri`/translations/${s.hash}`} key={s.hash}>
     {e.entry.disp} {e.nth}. {i}.
