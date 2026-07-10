@@ -26,7 +26,7 @@ export interface FullSection extends ApiSection {}
 
 interface DictionaryData {
   entries: readonly FullEntry[] | null;
-  refresh: () => void;
+  refresh: () => Promise<void>;
 }
 
 export const Dictionary = createContext<DictionaryData>({

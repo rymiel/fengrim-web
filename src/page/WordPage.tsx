@@ -1,5 +1,5 @@
 import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { InterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
+import { OldInterlinearData, InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -13,11 +13,10 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
   const { user } = useContext(User);
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);
   if (section.title === SectionTitle.TRANSLATION) {
-    const data = JSON.parse(section.content) as InterlinearData;
     const extra = user && <span className="edit">
       [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
     </span>;
-    return <InterlinearGloss data={data} asterisk link indent extra={extra} />;
+    return <InterlinearGloss data={section.content} link indent extra={extra} />;
   } else if (simple !== undefined) {
     const [, name, iconProps] = simple;
     return <>
@@ -60,7 +59,8 @@ function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): 
   ];
   const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
   const relevant = translations.filter(([_, s]) => {
-    const data = JSON.parse(s.content) as InterlinearData;
+    // TODO: use new translation content type
+    const data = JSON.parse(s.content) as OldInterlinearData;
     // TODO: use sol_sep instead for multi-word matches?
     return data.sol.split(/[?*, -]/).some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
   });

@@ -1,5 +1,5 @@
 import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { InterlinearData, InterlinearGloss, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearGloss, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -26,8 +26,7 @@ function Translation({
 
   return <dd id={section.hash} className={`translation ${highlighted ? "focus" : ""}`} ref={ref}>
     <InterlinearGloss
-      data={JSON.parse(section.content) as InterlinearData}
-      asterisk
+      data={section.content}
       link
       indent
       extra={
