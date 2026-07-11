@@ -4,7 +4,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 
 var PACKAGE = require("./package.json");
+var PACKAGE_LOCK = require("./package-lock.json");
 var version = PACKAGE.version;
+var cwcVersion = PACKAGE_LOCK.packages["node_modules/conlang-web-components"].version;
 
 const config = {
   entry: path.join(__dirname, "src", "index.tsx"),
@@ -48,6 +50,7 @@ const config = {
     new MiniCssExtractPlugin(),
     new webpack.DefinePlugin({
       WEB_VERSION: JSON.stringify(version),
+      CWC_VERSION: JSON.stringify(cwcVersion),
     }),
   ],
 };

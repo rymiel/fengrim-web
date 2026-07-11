@@ -31,6 +31,7 @@ export const AppToaster = (): Promise<Toaster> => {
 };
 
 declare const WEB_VERSION: string;
+declare const CWC_VERSION: string;
 
 export const toastErrorHandler = async (error: unknown): Promise<string> => {
   console.error(error);
@@ -134,7 +135,7 @@ export function App({ children }: PropsWithChildren) {
     <footer className={Classes.DARK}>
       <small>
         <p>
-          <span className="sc">{LANGUAGE}</span> by rymiel, web version {WEB_VERSION}
+          <span className="sc">{LANGUAGE}</span> by rymiel, web version {WEB_VERSION}, cwc version {CWC_VERSION}
           {version && `, api version ${version}`}
         </p>
       </small>
