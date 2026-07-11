@@ -143,17 +143,6 @@ header .bp6-divider {
   font-variant-caps: small-caps;
 }
 
-.bp6-callout.bp6-compact.edit-section {
-  width: fit-content;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.bp6-dark .bp6-callout.bp6-intent-primary:not(.bp6-minimal).edit-section {
-  background-color: rgba(45, 114, 210, 0.08);
-  border: 1px solid rgba(45, 114, 210);
-}
-
 /* fix weird behaviour */
 .bp6-non-ideal-state > .bp6-fill.bp6-button-group {
   flex-grow: 0;
