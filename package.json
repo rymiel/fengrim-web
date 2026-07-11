@@ -15,7 +15,7 @@
     "@blueprintjs/select": "^6.0.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "conlang-web-components": "gitlab:rymiel/conlang-web-components#75dd7ee0aeade9c0c0565230fce811fde3108906",
+    "conlang-web-components": "gitlab:rymiel/conlang-web-components#f1780ee08b4bfee014b3f68dc4423b5ef01be64d",
     "html-webpack-plugin": "^5.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
