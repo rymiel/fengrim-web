@@ -32,10 +32,9 @@ function Editor({ lang }: { lang: LangConfigData }) {
   const submit = async () => {
     const data = { sol, extra, eng, gloss: gloss === "" ? undefined : gloss };
     const w = await API.lang<ApiWord>("/word", "POST", {}, data);
-    const meanings = eng
-      .split(";")
-      .map((m) => API.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: m.trim() }));
-    await Promise.all(meanings);
+    for (const meaning of eng.split(";")) {
+      await API.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: meaning.trim() });
+    }
     dict.refresh();
     navigate(uri`/edit/${w.hash}`);
   };
