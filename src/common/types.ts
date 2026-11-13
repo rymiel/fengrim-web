@@ -40,3 +40,12 @@ export interface ValidationCandidate {
 }
 
 export type ValidationFailure = readonly [candidate: ValidationCandidate, reason: string];
+
+export type SlotValues = Readonly<Record<string, string>>;
+
+export interface SyllableSlot {
+  readonly key: string;
+  readonly name: string;
+  readonly size: number;
+  readonly values: readonly string[];
+}
