@@ -143,6 +143,11 @@ header .bp6-divider {
   font-variant-caps: small-caps;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 /* fix weird behaviour */
 .bp6-non-ideal-state > .bp6-fill.bp6-button-group {
   flex-grow: 0;
