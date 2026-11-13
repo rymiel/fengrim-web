@@ -12,9 +12,11 @@ import { LangConfigData } from "providers/langConfig";
 
 import { SyllableConfig, SyllableInstance, syllablesToIPA } from "./word";
 
+const DEFAULT_SYLLABLE: SyllableConfig = { consonant: [], initial: [], vowel: [], final: [], tones: [] };
+
 export function transformConfig(config: ApiConfig): LangConfigData {
   const generation = new GenerationInstance(configOrEmpty(config.generation, DEFAULT_GENERATION));
-  const syllable = new SyllableInstance(SYLLABLE_CONFIG);
+  const syllable = new SyllableInstance(configOrEmpty(config.syllable, DEFAULT_SYLLABLE));
   const soundChange = new SoundChangeInstance(
     configOrEmpty(config.sound_change, DEFAULT_SOUND_CHANGE),
     (word: string) => syllablesToIPA(syllable.syllabify(word)),
@@ -27,58 +29,3 @@ export function transformConfig(config: ApiConfig): LangConfigData {
 
   return { soundChange, generation, syllable, abbreviations, parts, ipa, script, config };
 }
-
-const SYLLABLE_CONFIG: SyllableConfig = {
-  consonant: [
-    ["z", "ts"],
-    ["c", "tsʰ"],
-    ["b", "p"],
-    ["p", "pʰ"],
-    ["d", "t"],
-    ["t", "tʰ"],
-    ["g", "k"],
-    ["k", "kʰ"],
-    ["m", "m"],
-    ["n", "n"],
-    ["ŋ", "ŋ"],
-    ["f", "f"],
-    ["s", "s"],
-    ["x", "sʰ"],
-    ["h", "h"],
-    ["l", "l"],
-    ["j", "j"],
-    ["w", "w"],
-    ["r", "ɾ"],
-  ],
-  initial: [
-    ["dj", "c"],
-    ["tj", "cʰ"],
-    ["nj", "ɲ"],
-    ["sj", "ç"],
-  ],
-  vowel: [
-    ["a", "a"],
-    ["e", "e"],
-    ["i", "i"],
-    ["o", "o"],
-    ["u", "u"],
-    ["ee", "ɛ"],
-    ["oo", "ɔ"],
-  ],
-  final: [
-    ["p", "p"],
-    ["t", "t"],
-    ["k", "k"],
-    ["m", "m"],
-    ["n", "n"],
-    ["ŋ", "ŋ"],
-    ["s", "s"],
-  ],
-  tones: [
-    ["\u0300", "F", "˥˩"],
-    ["\u0301", "R", "˩˥"],
-    ["", "H", "˥"],
-    ["\u030c", "L", "˩"],
-    ["\u0304", "M", "˧"],
-  ],
-};
