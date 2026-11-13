@@ -12,7 +12,7 @@
     "plugin:@blueprintjs/recommended",
     "plugin:deprecation/recommended"
   ],
-  "ignorePatterns": "webpack.config.cjs",
+  "ignorePatterns": "vite.config.mts",
   "settings": {
     "react": {
       "version": "detect"
