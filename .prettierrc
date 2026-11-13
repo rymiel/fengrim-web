@@ -9,7 +9,7 @@
     "",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^(components|lang|page|providers)(/.*)$",
+    "^(common|components|lang|page|providers)(/.*)$",
     "^(App|api)$",
     "",
     "^(?!.*[.]css$)[./].*$",
