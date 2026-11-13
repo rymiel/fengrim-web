@@ -17,18 +17,19 @@ import { Link, Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 
 import { LANGUAGE } from "api";
 
-let toasterCache: Promise<Toaster> | null = null;
-export const AppToaster = (): Promise<Toaster> => {
-  if (toasterCache !== null) {
-    return Promise.resolve(toasterCache);
-  }
-  const t = OverlayToaster.create({
-    position: Position.TOP,
-    usePortal: true,
-  });
-  toasterCache = t;
-  return t;
-};
+export const AppToaster = (() => {
+  let promise: Promise<Toaster> | null = null;
+
+  return () => {
+    if (!promise) {
+      promise = OverlayToaster.create({
+        position: Position.TOP,
+        usePortal: true,
+      });
+    }
+    return promise;
+  };
+})();
 
 declare const WEB_VERSION: string;
 declare const CWC_VERSION: string;
