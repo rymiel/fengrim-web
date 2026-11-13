@@ -1,4 +1,4 @@
-import { SectionTitle } from "page/EditWordPage";
+import { SectionTitle } from "common/sections";
 import { FullEntry, FullSection } from "providers/dictionary";
 
 export interface Example {

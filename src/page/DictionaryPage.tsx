@@ -2,7 +2,7 @@ import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/cor
 import { DictionaryList, Meanings, RowRenderer, useTitle } from "conlang-web-components";
 import { useContext } from "react";
 
-import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
+import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 import { Dictionary, FullEntry } from "providers/dictionary";
 
 const rowRender: RowRenderer<FullEntry> = (e: FullEntry) => ({

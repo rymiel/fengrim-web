@@ -5,9 +5,9 @@ import { coalesceInterlinearData } from "conlang-web-components/build/components
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
+import { useExamples } from "common/translations";
 import { Lookup, useAffixes, useLookup } from "lang/reverse";
-import { useExamples } from "lang/translations";
-import { SectionTitle, SIMPLE_SECTIONS } from "page/EditWordPage";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
 

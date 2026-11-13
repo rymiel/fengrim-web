@@ -1,11 +1,16 @@
-import { ApiData, entrySort, prefixSplit, uri } from "conlang-web-components";
+import { ApiData, ApiWord, entrySort, prefixSplit, uri } from "conlang-web-components";
 
-import { FullEntry } from "providers/dictionary";
+import { FullEntry, OptionalEntryFields } from "providers/dictionary";
 import { LangConfigData } from "providers/langConfig";
 
-import { partOfExtra } from "./extra";
+import { Part, partOfExtra } from "./extra";
 
 type ApiDictionary = Pick<ApiData, "words" | "meanings" | "sections">;
+
+export interface LangEntryFields extends OptionalEntryFields {
+  part: Part | null;
+  phon: string;
+}
 
 function displayWord({ extra, sol }: { extra: string; sol: string }): string {
   if (extra === "root") {
@@ -13,6 +18,14 @@ function displayWord({ extra, sol }: { extra: string; sol: string }): string {
   } else {
     return sol;
   }
+}
+
+function deriveFields(lang: LangConfigData, word: ApiWord) {
+  const part = partOfExtra(word.extra);
+  const ipa = lang.ipa(word.sol);
+  const phon = lang.syllable.ipa(word.sol);
+  const disp = displayWord(word);
+  return { part, ipa, phon, disp };
 }
 
 export function transformDictionary(lang: LangConfigData, d: ApiDictionary): FullEntry[] {
@@ -23,13 +36,9 @@ export function transformDictionary(lang: LangConfigData, d: ApiDictionary): Ful
   });
   const mWords = d.words
     .map((word) => {
-      const part = partOfExtra(word.extra);
-      const ipa = lang.ipa(word.sol);
-      const phon = lang.syllable.ipa(word.sol);
       const sections = word.sections.map((s) => d.sections.find((j) => j.hash === s)!);
       const meanings = word.meanings.map((s) => mMeanings.find((j) => j.hash === s)!);
-      const disp = displayWord(word);
-      return { ...word, part, ipa, phon, sections, meanings, disp };
+      return { ...word, ...deriveFields(lang, word), sections, meanings };
     })
     .sort(entrySort);
   return mWords.map((word, idx) => {

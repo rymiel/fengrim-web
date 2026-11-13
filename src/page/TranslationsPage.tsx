@@ -3,7 +3,7 @@ import { InterlinearGloss, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { useExamples } from "lang/translations";
+import { useExamples } from "common/translations";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 
 function Translation({

@@ -31,24 +31,10 @@ import {
 import { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 import { Part } from "lang/extra";
 import { Dictionary, FullEntry, FullMeaning, FullSection } from "providers/dictionary";
 import { API, LANGUAGE } from "api";
-
-export enum SectionTitle {
-  TRANSLATION = "translation",
-  USAGE = "usage",
-  ETYMOLOGY = "etymology",
-  INSTEAD = "instead",
-  COORDINATE = "coordinate",
-}
-
-export const SIMPLE_SECTIONS = [
-  [SectionTitle.USAGE, "Usage note", { icon: "info-sign" }],
-  [SectionTitle.ETYMOLOGY, "Etymology", { icon: "book" }],
-  [SectionTitle.INSTEAD, "Use instead", { icon: "flow-end", intent: "danger" }],
-  [SectionTitle.COORDINATE, "Coordinate terms", { icon: "compass" }],
-] as const;
 
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
