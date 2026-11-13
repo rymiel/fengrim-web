@@ -60,8 +60,6 @@ const MENU_LINKS = [
 ] as const;
 
 const PRIVATE_MENU_LINKS = [
-  ["/validate", "Validate"],
-  ["/numbers", "Numbers"],
   ["/sound_changes", "Sound Changes"],
   ["/generate", "Generate"],
   ["/config", "Config"],
