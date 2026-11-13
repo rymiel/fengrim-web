@@ -24,7 +24,6 @@ import {
   SectionEditor,
   TranslationSectionEditor,
   useEditContext,
-  User,
   useTitle,
   WordSelect,
 } from "conlang-web-components";
@@ -320,14 +319,11 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 export default function EditWordPage() {
   const { entries } = useContext(Dictionary);
   const { hash, edit } = useParams() as { hash: string; edit?: string };
-  const { user } = useContext(User);
   useTitle("Edit");
 
   let content = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
-  if (!user) {
-    content = <NonIdealState icon="error" title="You cannot access this page" />;
-  } else if (entries) {
+  if (entries) {
     const entry = entries.find((e) => e.hash === hash);
 
     if (entry) {

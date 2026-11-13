@@ -11,11 +11,12 @@ import {
   Position,
   Toaster,
 } from "@blueprintjs/core";
-import { ApiVersion, CustomApiError, Login, Logout, Title, User } from "conlang-web-components";
+import { ApiVersion, CustomApiError, Login, Logout, Title, User, UserOnly } from "conlang-web-components";
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { Link, Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
 
 import { LANGUAGE } from "api";
+import { MENU_LINKS, PRIVATE_MENU_LINKS } from "routes";
 
 export const AppToaster = (() => {
   let promise: Promise<Toaster> | null = null;
@@ -52,22 +53,8 @@ export const toastSuccessHandler = async (message: string): Promise<string> => {
   return toaster.show({ intent: Intent.SUCCESS, message });
 };
 
-const MENU_LINKS = [
-  ["/", "Home"],
-  ["/reverse", "Reverse"],
-  ["/stats", "Stats"],
-  ["/translations", "Translations"],
-] as const;
-
-const PRIVATE_MENU_LINKS = [
-  ["/sound_changes", "Sound Changes"],
-  ["/generate", "Generate"],
-  ["/config", "Config"],
-];
-
 function Menu() {
   const [isOpen, setOpen] = useState(false);
-  const { user } = useContext(User);
 
   return <>
     <Icon className="menu" icon="menu" size={36} onClick={() => setOpen(true)} />
@@ -80,14 +67,16 @@ function Menu() {
             </Link>
           </li>)}
         </ul>
-        {user && <Divider />}
-        {user && <ul>
-          {PRIVATE_MENU_LINKS.map(([slug, name]) => <li key={slug}>
-            <Link to={slug} onClick={() => setOpen(false)}>
-              {name}
-            </Link>
-          </li>)}
-        </ul>}
+        <UserOnly>
+          <Divider />
+          <ul>
+            {PRIVATE_MENU_LINKS.map(([slug, name]) => <li key={slug}>
+              <Link to={slug} onClick={() => setOpen(false)}>
+                {name}
+              </Link>
+            </li>)}
+          </ul>
+        </UserOnly>
       </nav>
     </Drawer>
   </>;

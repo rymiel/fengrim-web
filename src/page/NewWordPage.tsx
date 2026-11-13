@@ -1,5 +1,5 @@
 import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { ApiMeaning, ApiWord, uri, User, useTitle } from "conlang-web-components";
+import { ApiMeaning, ApiWord, uri, useTitle } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -53,13 +53,10 @@ function Editor({ lang }: { lang: LangConfigData }) {
 }
 
 export default function NewWordPage() {
-  const { user } = useContext(User);
   const lang = useContext(LangConfig);
   useTitle("New");
 
-  if (!user) {
-    return <NonIdealState icon="error" title="You cannot access this page" />;
-  } else if (lang === null) {
+  if (lang === null) {
     return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
   } else {
     return <div className="inter">

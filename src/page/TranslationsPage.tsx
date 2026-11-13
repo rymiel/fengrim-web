@@ -1,10 +1,11 @@
 import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { InterlinearGloss, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearGloss, uri, UserOnly, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { useExamples } from "common/translations";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
+import { LangConfig } from "providers/langConfig";
 
 function Translation({
   entry,
@@ -15,7 +16,7 @@ function Translation({
   section: FullSection;
   highlighted: boolean;
 }) {
-  const { user } = useContext(User);
+  const lang = useContext(LangConfig);
   const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -29,10 +30,13 @@ function Translation({
       data={section.content}
       link
       indent
+      script={lang?.hasScript}
       extra={
-        user && <span className="edit">
-          [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
-        </span>
+        <UserOnly>
+          <span className="edit">
+            [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
+          </span>
+        </UserOnly>
       }
     />
   </dd>;

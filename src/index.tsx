@@ -12,19 +12,20 @@ import EditWordPage from "page/EditWordPage";
 import GeneratePage from "page/GeneratePage";
 import IdPage from "page/IdPage";
 import NewWordPage from "page/NewWordPage";
-import ReversePage from "page/ReversePage";
 import SoundChangePage from "page/SoundChangePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import WordPage from "page/WordPage";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
-import { API, LANGUAGE } from "api";
+import { API, LANGUAGE, LANGUAGE_TAG } from "api";
 import { App, toastErrorHandler, toastSuccessHandler } from "App";
+import { SITE_ROUTES } from "routes";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "conlang-web-components/src/style.css";
 import "./style/index.css";
+import "./style/lang.css";
 
 const router = createBrowserRouter([
   {
@@ -52,31 +53,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/edit/:hash",
-        element: <EditWordPage />,
+        element: <UserOnly error>
+          <EditWordPage />
+        </UserOnly>,
       },
       {
         path: "/edit/:hash/:edit",
-        element: <EditWordPage />,
+        element: <UserOnly error>
+          <EditWordPage />
+        </UserOnly>,
       },
       {
         path: "/new",
-        element: <NewWordPage />,
-      },
-      {
-        path: "/reverse",
-        element: <ReversePage />,
-      },
-      {
-        path: "/reverse/:query",
-        element: <ReversePage />,
-      },
-      {
-        path: "/stats",
-        element: <StatsPage />,
-      },
-      {
-        path: "/generate",
-        element: <GeneratePage />,
+        element: <UserOnly error>
+          <NewWordPage />
+        </UserOnly>,
       },
       {
         path: "/translations",
@@ -87,10 +78,8 @@ const router = createBrowserRouter([
         element: <TranslationsPage />,
       },
       {
-        path: "/config",
-        element: <UserOnly error>
-          <ConfigPage />
-        </UserOnly>,
+        path: "/stats",
+        element: <StatsPage />,
       },
       {
         path: "/sound_changes",
@@ -98,6 +87,19 @@ const router = createBrowserRouter([
           <SoundChangePage />
         </UserOnly>,
       },
+      {
+        path: "/generate",
+        element: <UserOnly error>
+          <GeneratePage />
+        </UserOnly>,
+      },
+      {
+        path: "/config",
+        element: <UserOnly error>
+          <ConfigPage />
+        </UserOnly>,
+      },
+      ...SITE_ROUTES,
     ],
   },
 ]);
@@ -113,7 +115,7 @@ function Wrapper() {
         api={API}
         error={toastErrorHandler}
         success={toastSuccessHandler}
-        tag="x-elf"
+        tag={LANGUAGE_TAG}
         language={LANGUAGE}
       >
         <RouterProvider router={router} />
