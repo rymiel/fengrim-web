@@ -1,56 +1,22 @@
 import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
 import { uri, useTitle } from "conlang-web-components";
 import { Fragment, memo, ReactNode, useContext, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { Part } from "lang/extra";
-import { Affix, AffixNode, Lookup, lookupEmpty, TerminalNode, useAffixes, useLookup } from "lang/reverse";
-import { Dictionary, FullEntry } from "providers/dictionary";
-
-function TerminalTreeNode({ node: { entry } }: { node: TerminalNode }) {
-  const meaning = entry.meanings.map((m) => m.eng).join("; ");
-  const tag = entry.tag === undefined ? undefined : <Tag intent="danger">{entry.tag}</Tag>;
-  return <>
-    <Link to={entry.link}>
-      <i>{entry.disp}</i>
-    </Link>
-    : {tag} ({entry.extra}) "{meaning}"
-  </>;
-}
-
-function AffixTreeNode({ node: { original, cut, affix, children } }: { node: AffixNode }) {
-  const meaning = affix.entry.meanings[0].eng;
-  const affixed = affix.isSuffix ? "suffixed" : affix.isPrefix ? "prefixed" : "affixed";
-
-  return <>
-    <i>{original}</i>: <Link to={affix.entry.link}>{meaning}</Link> {affixed} form of <i>{cut}</i>
-    <ul>{children.map((i, j) => <TerminalTreeNode key={j} node={i} />)}</ul>
-  </>;
-}
-
-function LookupTree({ lookup: { terminal, affix } }: { lookup: Lookup }) {
-  return <ul>
-    {terminal.map((i, j) => <li key={j}>
-      <TerminalTreeNode node={i} />
-    </li>)}
-    {affix.map((i, j) => <li key={j}>
-      <AffixTreeNode node={i} />
-    </li>)}
-  </ul>;
-}
+import { ReverseResult } from "common/types";
+import { useReverseLookup } from "lang/reverse";
+import { Dictionary } from "providers/dictionary";
 
 const ReverseContent = memo(function ReverseContent({
-  entries,
-  affixes,
+  lookup,
   query,
 }: {
-  entries: readonly FullEntry[];
-  affixes: readonly Affix[];
+  lookup: (query: string) => ReverseResult;
   query: string;
 }) {
-  const lookup = useLookup(entries, affixes)(query);
+  const { items } = lookup(query);
 
-  if (lookupEmpty(lookup)) {
+  if (items.length === 0) {
     return <ul>
       <li>
         <i>{query}</i>:{" "}
@@ -60,64 +26,27 @@ const ReverseContent = memo(function ReverseContent({
       </li>
     </ul>;
   } else {
-    return <LookupTree lookup={lookup} />;
+    return <ul>{items.map((i, j) => <li key={j}>{i}</li>)}</ul>;
   }
 });
-
-function calculateFormsCount(entries: readonly FullEntry[] | null, affixes: readonly Affix[] | null) {
-  if (entries === null || affixes === null) {
-    return "...";
-  }
-
-  let nouns = 0;
-  let verbs = 0;
-  let adjs = 0;
-  for (const e of entries) {
-    if (e.part === Part.Noun) {
-      nouns++;
-    } else if (e.part === Part.Verb) {
-      verbs++;
-    } else if (e.part === Part.Adjective) {
-      adjs++;
-    }
-  }
-
-  let nounAffixes = 0;
-  let verbAffixes = 0;
-  let adjAffixes = 0;
-  for (const a of affixes) {
-    if (a.applies === Part.Noun) {
-      nounAffixes++;
-    } else if (a.applies === Part.Verb) {
-      verbAffixes++;
-    } else if (a.applies === Part.Adjective) {
-      adjAffixes++;
-    }
-  }
-
-  // TODO: stacking affixes?
-  const estimate = entries.length + nouns * nounAffixes + verbs * verbAffixes + adjs * adjAffixes;
-  return `${entries.length} lemmas, ${estimate} forms estimated`;
-}
 
 export default function ReversePage() {
   const { entries } = useContext(Dictionary);
   const { query } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState(query ?? "");
-  const affixes = useAffixes(entries ?? []); // FIXME: looks bad but it can't be conditional
+  const { formsCount, controls, lookup } = useReverseLookup(entries);
   useTitle("Reverse");
 
   let content: ReactNode = <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
-  const forms = calculateFormsCount(entries, affixes);
 
   if (query === undefined) {
     content = <NonIdealState icon="search" />;
-  } else if (entries) {
+  } else if (lookup) {
     // TODO: try to fuse words? not sure if possible to make efficient
     content = query.split(/[ -]/).map((i, j) => <Fragment key={j}>
       {j > 0 && <Divider />}
-      <ReverseContent entries={entries} affixes={affixes} query={i} />
+      <ReverseContent lookup={lookup} query={i} />
     </Fragment>);
   }
 
@@ -130,11 +59,12 @@ export default function ReversePage() {
     >
       <ControlGroup fill>
         <InputGroup
-          placeholder={`Reverse search (${forms})`}
+          placeholder={`Reverse search (${formsCount})`}
           onValueChange={(s) => setSearch(s)}
           value={search}
           size="large"
           fill
+          rightElement={controls}
         />
         <Button icon="arrow-right" intent="primary" type="submit" />
       </ControlGroup>

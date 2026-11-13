@@ -1,17 +1,6 @@
 import { RouteObject } from "react-router-dom";
 
-import ReversePage from "page/ReversePage";
-
-export const SITE_ROUTES: RouteObject[] = [
-  {
-    path: "/reverse",
-    element: <ReversePage />,
-  },
-  {
-    path: "/reverse/:query",
-    element: <ReversePage />,
-  },
-];
+export const SITE_ROUTES: RouteObject[] = [];
 
 export const MENU_LINKS = [
   ["/", "Home"],

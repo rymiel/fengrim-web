@@ -12,6 +12,7 @@ import EditWordPage from "page/EditWordPage";
 import GeneratePage from "page/GeneratePage";
 import IdPage from "page/IdPage";
 import NewWordPage from "page/NewWordPage";
+import ReversePage from "page/ReversePage";
 import SoundChangePage from "page/SoundChangePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
@@ -68,6 +69,14 @@ const router = createBrowserRouter([
         element: <UserOnly error>
           <NewWordPage />
         </UserOnly>,
+      },
+      {
+        path: "/reverse",
+        element: <ReversePage />,
+      },
+      {
+        path: "/reverse/:query",
+        element: <ReversePage />,
       },
       {
         path: "/translations",
