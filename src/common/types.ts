@@ -1,3 +1,4 @@
+import { IconName, Intent } from "@blueprintjs/core";
 import { ReactElement, ReactNode } from "react";
 
 import { FullEntry } from "providers/dictionary";
@@ -15,4 +16,12 @@ export interface ReverseLookup {
   readonly formsCount: string;
   readonly controls?: ReactElement;
   readonly lookup: ((query: string) => ReverseResult) | null;
+}
+
+export interface EntryStatus {
+  readonly icon: IconName;
+  readonly intent: Intent;
+  readonly title: string;
+  readonly label: string;
+  readonly href?: string;
 }

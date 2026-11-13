@@ -56,8 +56,6 @@ export interface Lookup {
   readonly affix: readonly AffixNode[];
 }
 
-export const lookupEmpty = (lookup: Lookup): boolean => lookup.affix.length === 0 && lookup.terminal.length === 0;
-
 function makeLookup(entries: readonly FullEntry[], affixes: readonly Affix[]): (query: string) => Lookup {
   const lookup = (q: string, { only }: { only?: Part } = {}): TerminalNode[] =>
     entries.filter((i) => i.sol === q && (only === undefined || i.part === only)).map((e) => ({ entry: e }));
@@ -79,10 +77,6 @@ function makeLookup(entries: readonly FullEntry[], affixes: readonly Affix[]): (
 
     return { terminal: terminalNodes, affix: affixNodes };
   };
-}
-
-export function useLookup(entries: readonly FullEntry[], affixes: readonly Affix[]): (query: string) => Lookup {
-  return makeLookup(entries, affixes);
 }
 
 function TerminalTreeNode({ node: { entry } }: { node: TerminalNode }) {

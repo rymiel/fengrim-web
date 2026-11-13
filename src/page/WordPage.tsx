@@ -1,23 +1,26 @@
 import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { InterlinearGloss, RichText, uri, User, useTitle } from "conlang-web-components";
+import { InterlinearGloss, RichText, uri, useLanguageTag, UserOnly, useTitle } from "conlang-web-components";
 // TODO: technically not properly exported, needs more permanent API after refactor is complete.
 import { coalesceInterlinearData } from "conlang-web-components/build/components/interlinear";
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { partName, shortPartName, StatusTags } from "common/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 import { useExamples } from "common/translations";
-import { Lookup, useAffixes, useLookup } from "lang/reverse";
+import { EntryContent } from "lang/entry";
+import { useReverseLookup } from "lang/reverse";
 import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
 
 function SectionContent({ entry, section, on }: { entry: FullEntry; section: FullSection; on: string }) {
-  const { user } = useContext(User);
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);
   if (section.title === SectionTitle.TRANSLATION) {
-    const extra = user && <span className="edit">
-      [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
-    </span>;
+    const extra = <UserOnly>
+      <span className="edit">
+        [ <Link to={uri`/edit/${entry.hash}/${section.hash}`}>edit</Link> ]
+      </span>
+    </UserOnly>;
     return <InterlinearGloss data={section.content} link indent extra={extra} />;
   } else if (simple !== undefined) {
     const [, name, iconProps] = simple;
@@ -35,9 +38,13 @@ function SectionContent({ entry, section, on }: { entry: FullEntry; section: Ful
 }
 
 function WordPageHeader({ entry }: { entry: FullEntry }) {
+  const tag = useLanguageTag();
   return <>
     <H2>{entry.disp}</H2>
-    <span className="space-right">{entry.phon}</span>
+    {entry.phon !== undefined && <span className="space-right">{entry.phon}</span>}
+    {entry.script !== undefined && <p className="space-right" lang={tag}>
+      {entry.script}
+    </p>}
     <span className="space-right">{entry.ipa}</span>
   </>;
 }
@@ -51,19 +58,14 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
 
 // TODO: move to its own page?
 function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): ReactElement[] {
-  const affixes = useAffixes(entries);
-  const lookup = useLookup(entries, affixes);
+  const { lookup } = useReverseLookup(entries);
   const examples = useExamples(entries);
-  const flattenLookup = (lookup: Lookup) => [
-    ...lookup.terminal.map((t) => t.entry),
-    ...lookup.affix.map((a) => a.affix.entry),
-    ...lookup.affix.flatMap((a) => a.children.map((t) => t.entry)),
-  ];
+  if (lookup === null) return [];
   const translations = examples.flatMap((e) => e.sections.map((s, i) => [e, s, i + 1] as const));
   const relevant = translations.filter(([_, s]) => {
     const { srcParts } = coalesceInterlinearData(s.content);
     // TODO: use srcWords instead for multi-word matches?
-    return srcParts.some((w) => flattenLookup(lookup(w)).some((e) => e === entry));
+    return srcParts.some((w) => lookup(w).entries.includes(entry));
   });
   return relevant.map(([e, s, i]) => <Link to={uri`/translations/${s.hash}`} key={s.hash}>
     {e.entry.disp} {e.nth}. {i}.
@@ -104,7 +106,6 @@ function LookupButton({ entry }: { entry: FullEntry }) {
 }
 
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
-  const { user } = useContext(User);
   const lang = useContext(LangConfig);
   const ref = useRef<HTMLHeadingElement | null>(null);
 
@@ -114,16 +115,19 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
     }
   }, [highlighted]);
 
-  const partHeader = lang?.parts?.[entry.extra] ?? entry.extra;
+  const partHeader = partName(lang?.parts ?? {}, entry.extra, entry.class);
 
   return <>
     <H3 className="meaning" ref={ref}>
       {highlighted ? <mark>{partHeader}</mark> : partHeader}
-      {user && <span className="edit">
-        [ <Link to={uri`/edit/${entry.hash}`}>edit</Link> ]
-      </span>}
+      <UserOnly>
+        <span className="edit">
+          [ <Link to={uri`/edit/${entry.hash}`}>edit</Link> ]
+        </span>
+      </UserOnly>
     </H3>
 
+    <StatusTags entry={entry} />
     {entry.tag && <Tag size="large" intent="danger">
       {entry.tag}
     </Tag>}
@@ -138,7 +142,10 @@ function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; hig
       </li>)}
     </ol>
     {entry.sections.map((s) => <SectionContent key={s.hash} entry={entry} section={s} on={entry.hash} />)}
-    {user && <LookupButton entry={entry} />}
+    <EntryContent entry={entry} />
+    <UserOnly>
+      <LookupButton entry={entry} />
+    </UserOnly>
   </>;
 }
 
@@ -154,7 +161,7 @@ export default function WordPage() {
     const matching = entries.filter((e) => e.sol === word);
 
     if (matching.length > 0) {
-      const parts = matching.map((i) => lang?.parts?.[i.extra] ?? i.extra);
+      const parts = matching.map((i) => shortPartName(lang?.parts ?? {}, i.extra));
       content = <div className="inter word">
         <nav>
           <ol>
