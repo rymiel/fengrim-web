@@ -24,6 +24,7 @@ import {
   SectionEditor,
   TranslationSectionEditor,
   useEditContext,
+  useLanguageTag,
   useTitle,
   WordSelect,
 } from "conlang-web-components";
@@ -31,13 +32,14 @@ import { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, us
 import { useParams } from "react-router-dom";
 
 import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
-import { Part } from "lang/extra";
+import { EXTRA_EDIT_FIELDS, generatedFields } from "lang/entry";
 import { Dictionary, FullEntry, FullMeaning, FullSection } from "providers/dictionary";
 import { API, LANGUAGE } from "api";
 
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
+  const tag = useLanguageTag();
 
   const doDelete = () => {
     API.lang(`/word/${v.hash}`, "DELETE").then(() => {
@@ -46,16 +48,21 @@ function EntryData({ v }: { v: FullEntry }) {
     });
   };
 
+  const doEdit = () => edit.openDrawer(<EntryEditor existing={v} />);
+
   return <>
     <BaseData v={v} />
-    <InfoTag left="sol" right={v.sol} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
-    <InfoTag left="extra" right={v.extra} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
-    <InfoTag left="tag" right={v.tag} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
-    <InfoTag left="ex" right={v.ex} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
-    <InfoTag left="gloss" right={v.gloss} onClick={() => edit.openDrawer(<EntryEditor existing={v} />)} />
-    <InfoTag left="part" right={v.part === null ? null : Part[v.part]} generated />
-    <InfoTag left="ipa" right={v.ipa} generated />
+    <InfoTag left="sol" right={v.sol} onClick={doEdit} />
+    <InfoTag left="extra" right={v.extra} onClick={doEdit} />
+    <InfoTag left="tag" right={v.tag} onClick={doEdit} />
+    <InfoTag left="ex" right={v.ex} onClick={doEdit} />
+    <InfoTag left="gloss" right={v.gloss} onClick={doEdit} />
+    {generatedFields(v).map(([left, right]) => <InfoTag key={left} left={left} right={right} generated />)}
     <InfoTag left="disp" right={v.disp} generated />
+    <InfoTag left="ipa" right={v.ipa} generated />
+    {v.phon !== undefined && <InfoTag left="phon" right={v.phon} generated />}
+    {v.script !== undefined && <InfoTag left="script" right={<span lang={tag}>{v.script}</span>} generated />}
+    {v.class !== undefined && <InfoTag left="class" right={v.class} generated />}
     <InfoSection title="meanings">
       {v.meanings.map((m, mi) => <InfoSection title={`[${mi}]`} key={m.hash}>
         <MeaningData v={m} />
@@ -245,6 +252,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
   const [extra, setExtra] = useState(existing.extra);
   const [isObsolete, setObsolete] = useState(existing.tag === "obsolete");
   const [gloss, setGloss] = useState(existing.gloss);
+  const [fields, setFields] = useState(() => EXTRA_EDIT_FIELDS.map(([key]) => existing[key]));
   const as = existing.hash;
 
   const submit = () => {
@@ -254,6 +262,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
       tag: isObsolete ? "obsolete" : existing.tag === "obsolete" ? undefined : existing.tag,
       ex: existing.ex,
       gloss: gloss === "" ? undefined : gloss,
+      ...Object.fromEntries(EXTRA_EDIT_FIELDS.map(([key], i) => [key, fields[i] === "" ? undefined : fields[i]])),
     };
     API.lang("/word", "POST", { as }, data).then(() => {
       dict.refresh();
@@ -268,6 +277,12 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
     <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={LANGUAGE} />
     <InputGroup onValueChange={setExtra} defaultValue={extra} placeholder="Extra" />
     <InputGroup onValueChange={setGloss} defaultValue={gloss} placeholder="Gloss" />
+    {EXTRA_EDIT_FIELDS.map(([key, placeholder], i) => <InputGroup
+      key={key}
+      onValueChange={(value) => setFields((f) => f.map((old, j) => (j === i ? value : old)))}
+      defaultValue={fields[i]}
+      placeholder={placeholder}
+    />)}
     <Checkbox onChange={(e) => setObsolete(e.currentTarget.checked)} defaultChecked={isObsolete} label="Obsolete" />
     <Button fill intent="success" text="Submit" onClick={submit} />
   </div>;
