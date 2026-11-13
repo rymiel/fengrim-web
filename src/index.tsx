@@ -16,6 +16,7 @@ import ReversePage from "page/ReversePage";
 import SoundChangePage from "page/SoundChangePage";
 import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
+import ValidationPage from "page/ValidationPage";
 import WordPage from "page/WordPage";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig } from "providers/langConfig";
@@ -89,6 +90,12 @@ const router = createBrowserRouter([
       {
         path: "/stats",
         element: <StatsPage />,
+      },
+      {
+        path: "/validate",
+        element: <UserOnly error>
+          <ValidationPage />
+        </UserOnly>,
       },
       {
         path: "/sound_changes",

@@ -31,3 +31,12 @@ export interface NewWordExtra {
   readonly content?: ReactNode;
   readonly data: { readonly ex?: string };
 }
+
+export interface ValidationCandidate {
+  readonly key: string;
+  readonly sol: string;
+  readonly label: string;
+  readonly entry?: FullEntry;
+}
+
+export type ValidationFailure = readonly [candidate: ValidationCandidate, reason: string];

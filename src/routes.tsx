@@ -10,6 +10,7 @@ export const MENU_LINKS = [
 ] as const;
 
 export const PRIVATE_MENU_LINKS = [
+  ["/validate", "Validate"],
   ["/sound_changes", "Sound Changes"],
   ["/generate", "Generate"],
   ["/config", "Config"],
