@@ -10,7 +10,7 @@
     "<THIRD_PARTY_MODULES>",
     "",
     "^(common|components|lang|page|providers)(/.*)$",
-    "^(App|api)$",
+    "^(App|api|routes)$",
     "",
     "^(?!.*[.]css$)[./].*$",
     "",
