@@ -159,7 +159,7 @@ export default function WordPage() {
         <nav>
           <ol>
             {parts.map((i, j) => <li key={j}>
-              <Link to={`/w/${word}/${j + 1}`}>{i}</Link>
+              <Link to={uri`/w/${word}/${j + 1}`}>{i}</Link>
             </li>)}
           </ol>
         </nav>
