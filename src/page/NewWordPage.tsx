@@ -1,18 +1,8 @@
-import {
-  Button,
-  ControlGroup,
-  HTMLSelect,
-  InputGroup,
-  NonIdealState,
-  Spinner,
-  SpinnerSize,
-  Tag,
-} from "@blueprintjs/core";
+import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
 import { ApiMeaning, ApiWord, uri, User, useTitle } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { partOfExtra } from "lang/extra";
 import { Dictionary } from "providers/dictionary";
 import { LangConfig, LangConfigData } from "providers/langConfig";
 import { API, LANGUAGE } from "api";
@@ -25,12 +15,9 @@ function Editor({ lang }: { lang: LangConfigData }) {
   const [extra, setExtra] = useState("");
   const [eng, setEng] = useState("");
   const [gloss, setGloss] = useState("");
-  const part = partOfExtra(extra);
-
-  const valid = part !== null;
 
   const submit = async () => {
-    const data = { sol, extra, eng, gloss: gloss === "" ? undefined : gloss };
+    const data = { sol, extra, gloss: gloss === "" ? undefined : gloss };
     const w = await API.lang<ApiWord>("/word", "POST", {}, data);
     for (const meaning of eng.split(";")) {
       await API.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: meaning.trim() });
@@ -62,9 +49,6 @@ function Editor({ lang }: { lang: LangConfigData }) {
       <span>{lang.ipa(sol)}</span>
       <Button fill intent="success" text="Submit" onClick={submit} />
     </ControlGroup>
-    {!valid && part !== null && <Tag size="large" intent="danger">
-      Invalid form
-    </Tag>}
   </div>;
 }
 
