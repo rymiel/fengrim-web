@@ -1,4 +1,4 @@
-import { EditField, EntryStatus, GeneratedField } from "common/types";
+import { EditField, EntryStatus, GeneratedField, NewWordExtra } from "common/types";
 import { FullEntry } from "providers/dictionary";
 
 import { Part } from "./extra";
@@ -15,4 +15,12 @@ export function entryStatus(_entry: FullEntry): readonly EntryStatus[] {
 
 export function EntryContent(_props: { entry: FullEntry }) {
   return null;
+}
+
+export function draftClass(_sol: string, _extra: string): string | null {
+  return null;
+}
+
+export function useNewWordExtra(_sol: string, _extra: string): NewWordExtra {
+  return { data: {} };
 }

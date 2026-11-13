@@ -25,3 +25,9 @@ export interface EntryStatus {
   readonly label: string;
   readonly href?: string;
 }
+
+export interface NewWordExtra {
+  readonly fields?: ReactNode;
+  readonly content?: ReactNode;
+  readonly data: { readonly ex?: string };
+}
