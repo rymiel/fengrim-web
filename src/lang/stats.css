@@ -1,0 +1,15 @@
+.stats.rhyme table .br {
+  border-right: solid 1px rgba(255, 255, 255, 0.2);
+}
+
+.stats.rhyme table .bb {
+  border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+}
+
+.stats.rhyme table td {
+  text-align: center;
+}
+
+.bp6-dark .stats.rhyme table.bp6-html-table td.unset {
+  color: #f6f7f999;
+}

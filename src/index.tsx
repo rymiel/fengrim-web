@@ -4,7 +4,6 @@ import { SITE } from "site";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "conlang-web-components/src/style.css";
-import "conlang-web-components/src/site/style.css";
 import "./style/lang.css";
 
 declare const WEB_VERSION: string;
