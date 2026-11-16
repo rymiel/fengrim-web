@@ -1,9 +1,16 @@
 import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { Dictionary, DictionaryList, Meanings, RowRenderer, useTitle } from "conlang-web-components";
+import {
+  Dictionary,
+  DictionaryList,
+  Meanings,
+  RowRenderer,
+  ScriptCell,
+  SectionTitle,
+  SIMPLE_SECTIONS,
+  StatusIcons,
+  useTitle,
+} from "conlang-web-components";
 import { useContext } from "react";
-
-import { ExtraCell, ScriptCell, StatusIcons } from "common/display";
-import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 
 const rowRender: RowRenderer = (e) => ({
   eng: <span>
@@ -22,7 +29,6 @@ const rowRender: RowRenderer = (e) => ({
     )}
   </span>,
   ...(e.script !== undefined && { trans: <ScriptCell entry={e} /> }),
-  extra: <ExtraCell entry={e} />,
 });
 
 export default function DictionaryPage() {

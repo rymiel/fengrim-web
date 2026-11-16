@@ -6,13 +6,12 @@ import {
   InterlinearGloss,
   LangConfig,
   uri,
+  useExamples,
   UserOnly,
   useTitle,
 } from "conlang-web-components";
 import { useContext, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-
-import { useExamples } from "common/translations";
 
 function Translation({
   entry,

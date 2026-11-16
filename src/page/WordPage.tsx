@@ -5,22 +5,23 @@ import {
   FullSection,
   InterlinearGloss,
   LangConfig,
+  partName,
   RichText,
+  SectionTitle,
+  shortPartName,
+  SIMPLE_SECTIONS,
+  StatusTags,
   uri,
+  useExamples,
   useLanguageTag,
   UserOnly,
+  useSite,
   useTitle,
 } from "conlang-web-components";
 // TODO: technically not properly exported, needs more permanent API after refactor is complete.
 import { coalesceInterlinearData } from "conlang-web-components/build/components/interlinear";
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-
-import { partName, shortPartName, StatusTags } from "common/display";
-import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
-import { useExamples } from "common/translations";
-import { EntryContent } from "lang/entry";
-import { useReverseLookup } from "lang/reverse";
 
 function SectionContent({ entry, section, on }: { entry: FullEntry; section: FullSection; on: string }) {
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);
@@ -67,6 +68,7 @@ function Meaning({ prefix, eng }: { prefix?: string; eng: string }) {
 
 // TODO: move to its own page?
 function useTranslationUsages(entry: FullEntry, entries: readonly FullEntry[]): ReactElement[] {
+  const { useReverseLookup } = useSite();
   const { lookup } = useReverseLookup(entries);
   const examples = useExamples(entries);
   if (lookup === null) return [];
@@ -116,6 +118,7 @@ function LookupButton({ entry }: { entry: FullEntry }) {
 
 function WordPageContent({ entry, highlighted = false }: { entry: FullEntry; highlighted?: boolean }) {
   const lang = useContext(LangConfig);
+  const { EntryContent } = useSite();
   const ref = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {

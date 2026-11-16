@@ -1,15 +1,13 @@
 import { Button, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { LangConfig, uri, useErrorHandler, useTitle, ValidationFailure } from "conlang-web-components";
+import { LangConfig, uri, useSite, useTitle, useValidate, ValidationFailure } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { validate } from "common/validation";
-import { useValidationCandidates } from "lang/validation";
-
 export default function ValidationPage() {
   const lang = useContext(LangConfig);
+  const { useValidationCandidates } = useSite();
   const candidates = useValidationCandidates();
-  const error = useErrorHandler();
+  const validate = useValidate();
   const [fail, setFail] = useState<readonly ValidationFailure[] | null>(null);
   const [isLoading, setLoading] = useState(false);
   useTitle("Validate");
@@ -27,7 +25,7 @@ export default function ValidationPage() {
       onClick={() => {
         setFail(null);
         setLoading(true);
-        validate(candidates, lang.soundChange, error).then((f) => {
+        validate(candidates, lang.soundChange).then((f) => {
           setFail(f);
           setLoading(false);
         });

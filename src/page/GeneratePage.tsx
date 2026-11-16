@@ -8,13 +8,11 @@ import {
   SpinnerSize,
   Tag,
 } from "@blueprintjs/core";
-import { GenerationInstance, LangConfig, SoundChangeInstance, useErrorHandler, useTitle } from "conlang-web-components";
+import { GenerationInstance, LangConfig, SoundChangeInstance, useTitle, useValidate } from "conlang-web-components";
 import { useContext, useEffect, useState } from "react";
 
-import { validate } from "common/validation";
-
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
-  const error = useErrorHandler();
+  const validate = useValidate();
   const [current, setCurrent] = useState("");
   const [isValid, setValid] = useState<boolean | undefined>(undefined);
   const [sylls, setSylls] = useState(1);
@@ -32,9 +30,9 @@ function Content({ soundChange, generation }: { soundChange: SoundChangeInstance
   useEffect(() => {
     if (current !== "") {
       const candidate = { key: current, sol: current, label: `"${current}"` };
-      validate([candidate], soundChange, error).then((fail) => setValid(fail.length === 0));
+      validate([candidate], soundChange).then((fail) => setValid(fail.length === 0));
     }
-  }, [current, soundChange, error]);
+  }, [current, soundChange, validate]);
 
   const generate = () => setCurrent("");
   const changeSylls = (s: number) => {

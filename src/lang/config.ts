@@ -1,7 +1,6 @@
 import {
   ApiConfig,
   configOrEmpty,
-  createTransformConfig,
   DEFAULT_SOUND_CHANGE,
   LanguageConfig,
   SoundChangeInstance,
@@ -17,7 +16,7 @@ declare module "conlang-web-components" {
   }
 }
 
-function languageConfig(config: ApiConfig): LanguageConfig {
+export function languageConfig(config: ApiConfig): LanguageConfig {
   const syllable = new SyllableInstance(configOrEmpty(config.syllable, DEFAULT_SYLLABLE));
   const soundChange = new SoundChangeInstance(
     configOrEmpty(config.sound_change, DEFAULT_SOUND_CHANGE),
@@ -28,5 +27,3 @@ function languageConfig(config: ApiConfig): LanguageConfig {
   const hasScript = false;
   return { soundChange, syllable, script, hasScript };
 }
-
-export const transformConfig = createTransformConfig(languageConfig);

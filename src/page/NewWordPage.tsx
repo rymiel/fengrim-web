@@ -1,14 +1,23 @@
 import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { ApiMeaning, ApiWord, Dictionary, LangConfig, LangConfigData, uri, useTitle } from "conlang-web-components";
+import {
+  ApiMeaning,
+  ApiWord,
+  Dictionary,
+  LangConfig,
+  LangConfigData,
+  partName,
+  uri,
+  useApi,
+  useSite,
+  useTitle,
+} from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { partName } from "common/display";
-import { draftClass, useNewWordExtra } from "lang/entry";
-import { API, LANGUAGE } from "api";
-
 function Editor({ lang }: { lang: LangConfigData }) {
   const dict = useContext(Dictionary);
+  const api = useApi();
+  const { language, draftClass, useNewWordExtra } = useSite();
   const [query, _] = useSearchParams();
   const navigate = useNavigate();
   const [sol, setSol] = useState(query.get("sol") ?? "");
@@ -19,9 +28,9 @@ function Editor({ lang }: { lang: LangConfigData }) {
 
   const submit = async () => {
     const data = { sol, extra, gloss: gloss === "" ? undefined : gloss, ...extraData };
-    const w = await API.lang<ApiWord>("/word", "POST", {}, data);
+    const w = await api.lang<ApiWord>("/word", "POST", {}, data);
     for (const meaning of eng.split(";")) {
-      await API.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: meaning.trim() });
+      await api.lang<ApiMeaning>("/meaning", "POST", { to: w.hash }, { eng: meaning.trim() });
     }
     dict.refresh();
     navigate(uri`/edit/${w.hash}`);
@@ -30,7 +39,7 @@ function Editor({ lang }: { lang: LangConfigData }) {
   return <div className="inter">
     <p>Creating new entry.</p>
     <ControlGroup vertical className="fit-width">
-      <InputGroup onValueChange={setSol} placeholder={LANGUAGE} defaultValue={sol} />
+      <InputGroup onValueChange={setSol} placeholder={language} defaultValue={sol} />
       <HTMLSelect
         onChange={(e) => {
           setExtra(e.currentTarget.value);

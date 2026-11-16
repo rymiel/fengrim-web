@@ -1,9 +1,7 @@
 import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { Dictionary, ReverseResult, uri, useTitle } from "conlang-web-components";
+import { Dictionary, ReverseResult, uri, useSite, useTitle } from "conlang-web-components";
 import { Fragment, memo, ReactNode, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-import { useReverseLookup } from "lang/reverse";
 
 const ReverseContent = memo(function ReverseContent({
   lookup,
@@ -33,6 +31,7 @@ export default function ReversePage() {
   const { query } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState(query ?? "");
+  const { useReverseLookup } = useSite();
   const { formsCount, controls, lookup } = useReverseLookup(entries);
   useTitle("Reverse");
 

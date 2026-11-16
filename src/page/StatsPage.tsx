@@ -1,8 +1,7 @@
-import { useTitle } from "conlang-web-components";
-
-import { STATS_SECTIONS } from "lang/stats";
+import { useSite, useTitle } from "conlang-web-components";
 
 export default function StatsPage() {
+  const { statsSections } = useSite();
   useTitle("Stats");
-  return <div className="inter stats-page">{STATS_SECTIONS.map((Section, i) => <Section key={i} />)}</div>;
+  return <div className="inter stats-page">{statsSections.map((Section, i) => <Section key={i} />)}</div>;
 }

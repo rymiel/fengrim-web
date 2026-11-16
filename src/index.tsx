@@ -1,11 +1,9 @@
 import { BlueprintProvider } from "@blueprintjs/core";
-import { ConlangProvider, ErrorPage, UserOnly } from "conlang-web-components";
+import { ConlangProvider, ErrorPage, SiteContext, UserOnly } from "conlang-web-components";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { transformConfig } from "lang/config";
-import { transformDictionary } from "lang/dictionary";
 import ConfigPage from "page/ConfigPage";
 import DictionaryPage from "page/DictionaryPage";
 import EditWordPage from "page/EditWordPage";
@@ -18,9 +16,8 @@ import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import ValidationPage from "page/ValidationPage";
 import WordPage from "page/WordPage";
-import { API, LANGUAGE, LANGUAGE_TAG } from "api";
 import { App, toastErrorHandler, toastSuccessHandler } from "App";
-import { SITE_ROUTES } from "routes";
+import { SITE } from "site";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "conlang-web-components/src/style.css";
@@ -113,7 +110,7 @@ const router = createBrowserRouter([
           <ConfigPage />
         </UserOnly>,
       },
-      ...SITE_ROUTES,
+      ...SITE.routes,
     ],
   },
 ]);
@@ -121,17 +118,19 @@ const router = createBrowserRouter([
 function Wrapper() {
   return <StrictMode>
     <BlueprintProvider>
-      <ConlangProvider
-        transformDictionary={transformDictionary}
-        transformConfig={transformConfig}
-        api={API}
-        error={toastErrorHandler}
-        success={toastSuccessHandler}
-        tag={LANGUAGE_TAG}
-        language={LANGUAGE}
-      >
-        <RouterProvider router={router} />
-      </ConlangProvider>
+      <SiteContext.Provider value={SITE}>
+        <ConlangProvider
+          transformDictionary={SITE.transformDictionary}
+          transformConfig={SITE.transformConfig}
+          api={SITE.api}
+          error={toastErrorHandler}
+          success={toastSuccessHandler}
+          tag={SITE.tag}
+          language={SITE.language}
+        >
+          <RouterProvider router={router} />
+        </ConlangProvider>
+      </SiteContext.Provider>
     </BlueprintProvider>
   </StrictMode>;
 }

@@ -11,12 +11,9 @@ import {
   Position,
   Toaster,
 } from "@blueprintjs/core";
-import { ApiVersion, CustomApiError, Login, Logout, Title, User, UserOnly } from "conlang-web-components";
+import { ApiVersion, CustomApiError, Login, Logout, Title, User, UserOnly, useSite } from "conlang-web-components";
 import { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { Link, Outlet, ScrollRestoration, useNavigate } from "react-router-dom";
-
-import { LANGUAGE } from "api";
-import { MENU_LINKS, PRIVATE_MENU_LINKS } from "routes";
 
 export const AppToaster = (() => {
   let promise: Promise<Toaster> | null = null;
@@ -54,6 +51,7 @@ export const toastSuccessHandler = async (message: string): Promise<string> => {
 };
 
 function Menu() {
+  const { menuLinks, privateMenuLinks } = useSite();
   const [isOpen, setOpen] = useState(false);
 
   return <>
@@ -61,7 +59,7 @@ function Menu() {
     <Drawer isOpen={isOpen} onClose={() => setOpen(false)} position="left" size={DrawerSize.SMALL}>
       <nav>
         <ul>
-          {MENU_LINKS.map(([slug, name]) => <li key={slug}>
+          {menuLinks.map(([slug, name]) => <li key={slug}>
             <Link to={slug} onClick={() => setOpen(false)}>
               {name}
             </Link>
@@ -70,7 +68,7 @@ function Menu() {
         <UserOnly>
           <Divider />
           <ul>
-            {PRIVATE_MENU_LINKS.map(([slug, name]) => <li key={slug}>
+            {privateMenuLinks.map(([slug, name]) => <li key={slug}>
               <Link to={slug} onClick={() => setOpen(false)}>
                 {name}
               </Link>
@@ -83,14 +81,15 @@ function Menu() {
 }
 
 export function App({ children }: PropsWithChildren) {
+  const { language } = useSite();
   const version = useContext(ApiVersion);
   const user = useContext(User);
   const navigate = useNavigate();
   const { title } = useContext(Title);
   if (!title) {
-    document.title = LANGUAGE;
+    document.title = language;
   } else {
-    document.title = `${LANGUAGE} | ${title}`;
+    document.title = `${language} | ${title}`;
   }
 
   // Migrate old paths
@@ -111,7 +110,7 @@ export function App({ children }: PropsWithChildren) {
     <header className={Classes.DARK}>
       <Menu />
       <H1 className="sc">
-        <Link to="/">{LANGUAGE}</Link>
+        <Link to="/">{language}</Link>
       </H1>
       {title && <>
         <Divider></Divider>
@@ -123,7 +122,7 @@ export function App({ children }: PropsWithChildren) {
     <footer className={Classes.DARK}>
       <small>
         <p>
-          <span className="sc">{LANGUAGE}</span> by rymiel, web version {WEB_VERSION}, cwc version {CWC_VERSION}
+          <span className="sc">{language}</span> by rymiel, web version {WEB_VERSION}, cwc version {CWC_VERSION}
           {version && `, api version ${version}`}
         </p>
       </small>

@@ -26,26 +26,28 @@ import {
   InfoTag,
   RichText,
   SectionEditor,
+  SectionTitle,
+  SIMPLE_SECTIONS,
   TranslationSectionEditor,
+  useApi,
   useEditContext,
   useLanguageTag,
+  useSite,
   useTitle,
   WordSelect,
 } from "conlang-web-components";
 import { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
-import { EXTRA_EDIT_FIELDS, generatedFields } from "lang/entry";
-import { API, LANGUAGE } from "api";
-
 function EntryData({ v }: { v: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
   const tag = useLanguageTag();
+  const api = useApi();
+  const { generatedFields } = useSite();
 
   const doDelete = () => {
-    API.lang(`/word/${v.hash}`, "DELETE").then(() => {
+    api.lang(`/word/${v.hash}`, "DELETE").then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -251,11 +253,13 @@ function TextSectionEditor({
 function EntryEditor({ existing }: { existing: FullEntry }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
+  const api = useApi();
+  const { language, extraEditFields } = useSite();
   const [sol, setSol] = useState(existing.sol);
   const [extra, setExtra] = useState(existing.extra);
   const [isObsolete, setObsolete] = useState(existing.tag === "obsolete");
   const [gloss, setGloss] = useState(existing.gloss);
-  const [fields, setFields] = useState(() => EXTRA_EDIT_FIELDS.map(([key]) => existing[key]));
+  const [fields, setFields] = useState(() => extraEditFields.map(([key]) => existing[key]));
   const as = existing.hash;
 
   const submit = () => {
@@ -265,9 +269,9 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
       tag: isObsolete ? "obsolete" : existing.tag === "obsolete" ? undefined : existing.tag,
       ex: existing.ex,
       gloss: gloss === "" ? undefined : gloss,
-      ...Object.fromEntries(EXTRA_EDIT_FIELDS.map(([key], i) => [key, fields[i] === "" ? undefined : fields[i]])),
+      ...Object.fromEntries(extraEditFields.map(([key], i) => [key, fields[i] === "" ? undefined : fields[i]])),
     };
-    API.lang("/word", "POST", { as }, data).then(() => {
+    api.lang("/word", "POST", { as }, data).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -277,10 +281,10 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
     <p>
       Editing entry <Code>{as}</Code>.
     </p>
-    <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={LANGUAGE} />
+    <InputGroup onValueChange={setSol} defaultValue={sol} placeholder={language} />
     <InputGroup onValueChange={setExtra} defaultValue={extra} placeholder="Extra" />
     <InputGroup onValueChange={setGloss} defaultValue={gloss} placeholder="Gloss" />
-    {EXTRA_EDIT_FIELDS.map(([key, placeholder], i) => <InputGroup
+    {extraEditFields.map(([key, placeholder], i) => <InputGroup
       key={key}
       onValueChange={(value) => setFields((f) => f.map((old, j) => (j === i ? value : old)))}
       defaultValue={fields[i]}
@@ -294,6 +298,7 @@ function EntryEditor({ existing }: { existing: FullEntry }) {
 function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }) {
   const edit = useEditContext();
   const dict = useContext(Dictionary);
+  const api = useApi();
   const [rest, setRest] = useState(existing?.eng ?? "");
   const [prefix, setPrefix] = useState(existing?.prefix ?? "");
   const as = existing?.hash;
@@ -304,7 +309,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
 
   const doSubmit = () => {
     const eng = prefix === undefined || prefix === "" ? rest : `(${prefix}) ${rest}`;
-    API.lang("/meaning", "POST", { to, as }, { eng }).then(() => {
+    api.lang("/meaning", "POST", { to, as }, { eng }).then(() => {
       dict.refresh();
       edit.closeDrawer();
     });
@@ -314,7 +319,7 @@ function MeaningEditor({ to, existing }: { to?: string; existing?: FullMeaning }
     if (as === undefined) {
       throw new Error("Cannot delete nonexistent section");
     }
-    API.lang(`/meaning/${as}`, "DELETE").then(() => {
+    api.lang(`/meaning/${as}`, "DELETE").then(() => {
       dict.refresh();
       edit.closeDrawer();
     });

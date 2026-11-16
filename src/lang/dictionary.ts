@@ -1,4 +1,4 @@
-import { ApiWord, createTransformDictionary, DerivedFields, LangConfigData } from "conlang-web-components";
+import { ApiWord, DerivedFields, LangConfigData } from "conlang-web-components";
 
 import { Part, partOfExtra } from "./extra";
 
@@ -17,12 +17,10 @@ function displayWord({ extra, sol }: { extra: string; sol: string }): string {
   }
 }
 
-function deriveFields(lang: LangConfigData, word: ApiWord): DerivedFields {
+export function deriveFields(lang: LangConfigData, word: ApiWord): DerivedFields {
   const part = partOfExtra(word.extra);
   const ipa = lang.ipa(word.sol);
   const phon = lang.syllable.ipa(word.sol);
   const disp = displayWord(word);
   return { part, ipa, phon, disp };
 }
-
-export const transformDictionary = createTransformDictionary(deriveFields);
