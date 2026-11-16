@@ -1,11 +1,9 @@
 import { Button, ControlGroup, Divider, InputGroup, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { uri, useTitle } from "conlang-web-components";
+import { Dictionary, ReverseResult, uri, useTitle } from "conlang-web-components";
 import { Fragment, memo, ReactNode, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ReverseResult } from "common/types";
 import { useReverseLookup } from "lang/reverse";
-import { Dictionary } from "providers/dictionary";
 
 const ReverseContent = memo(function ReverseContent({
   lookup,

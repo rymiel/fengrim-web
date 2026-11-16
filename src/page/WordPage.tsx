@@ -1,5 +1,16 @@
 import { Button, H2, H3, H4, Icon, IconSize, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { InterlinearGloss, RichText, uri, useLanguageTag, UserOnly, useTitle } from "conlang-web-components";
+import {
+  Dictionary,
+  FullEntry,
+  FullSection,
+  InterlinearGloss,
+  LangConfig,
+  RichText,
+  uri,
+  useLanguageTag,
+  UserOnly,
+  useTitle,
+} from "conlang-web-components";
 // TODO: technically not properly exported, needs more permanent API after refactor is complete.
 import { coalesceInterlinearData } from "conlang-web-components/build/components/interlinear";
 import { Fragment, ReactElement, useContext, useEffect, useRef, useState } from "react";
@@ -10,8 +21,6 @@ import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 import { useExamples } from "common/translations";
 import { EntryContent } from "lang/entry";
 import { useReverseLookup } from "lang/reverse";
-import { Dictionary, FullEntry, FullSection } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 
 function SectionContent({ entry, section, on }: { entry: FullEntry; section: FullSection; on: string }) {
   const simple = SIMPLE_SECTIONS.find(([title]) => section.title === title);

@@ -1,12 +1,10 @@
 import { Button, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { uri, useErrorHandler, useTitle } from "conlang-web-components";
+import { LangConfig, uri, useErrorHandler, useTitle, ValidationFailure } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { ValidationFailure } from "common/types";
 import { validate } from "common/validation";
 import { useValidationCandidates } from "lang/validation";
-import { LangConfig } from "providers/langConfig";
 
 export default function ValidationPage() {
   const lang = useContext(LangConfig);

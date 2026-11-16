@@ -1,12 +1,11 @@
 import { Icon, NonIdealState, Spinner, SpinnerSize, Tag } from "@blueprintjs/core";
-import { DictionaryList, Meanings, RowRenderer, useTitle } from "conlang-web-components";
+import { Dictionary, DictionaryList, Meanings, RowRenderer, useTitle } from "conlang-web-components";
 import { useContext } from "react";
 
 import { ExtraCell, ScriptCell, StatusIcons } from "common/display";
 import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
-import { Dictionary, FullEntry } from "providers/dictionary";
 
-const rowRender: RowRenderer<FullEntry> = (e: FullEntry) => ({
+const rowRender: RowRenderer = (e) => ({
   eng: <span>
     <StatusIcons entry={e} />
     {e.tag && <Tag intent="danger">{e.tag}</Tag>}

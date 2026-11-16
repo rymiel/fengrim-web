@@ -1,7 +1,5 @@
+import { Dictionary, ValidationCandidate, ValidationFailure } from "conlang-web-components";
 import { useContext } from "react";
-
-import { ValidationCandidate, ValidationFailure } from "common/types";
-import { Dictionary } from "providers/dictionary";
 
 export function useValidationCandidates(): readonly ValidationCandidate[] | null {
   const { entries } = useContext(Dictionary);

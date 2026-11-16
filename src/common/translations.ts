@@ -1,5 +1,6 @@
+import { FullEntry, FullSection } from "conlang-web-components";
+
 import { SectionTitle } from "common/sections";
-import { FullEntry, FullSection } from "providers/dictionary";
 
 export interface Example {
   readonly entry: FullEntry;

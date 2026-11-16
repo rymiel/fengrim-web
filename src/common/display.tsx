@@ -1,10 +1,8 @@
 import { AnchorButton, Icon, Tag } from "@blueprintjs/core";
-import { KeyValue, useLanguageTag } from "conlang-web-components";
+import { FullEntry, KeyValue, LangConfig, useLanguageTag } from "conlang-web-components";
 import { useContext } from "react";
 
 import { entryStatus } from "lang/entry";
-import { FullEntry } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 
 export function partName(parts: KeyValue, extra: string, cls: string | null | undefined): string {
   return (parts[extra] ?? extra).replace("%", cls ?? "?");

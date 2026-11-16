@@ -1,6 +1,5 @@
-import { SoundChangeInstance } from "conlang-web-components";
+import { SoundChangeInstance, ValidationCandidate, ValidationFailure } from "conlang-web-components";
 
-import { ValidationCandidate, ValidationFailure } from "common/types";
 import { validateLocal } from "lang/validation";
 import { API } from "api";
 

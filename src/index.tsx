@@ -18,8 +18,6 @@ import StatsPage from "page/StatsPage";
 import TranslationsPage from "page/TranslationsPage";
 import ValidationPage from "page/ValidationPage";
 import WordPage from "page/WordPage";
-import { Dictionary } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 import { API, LANGUAGE, LANGUAGE_TAG } from "api";
 import { App, toastErrorHandler, toastSuccessHandler } from "App";
 import { SITE_ROUTES } from "routes";
@@ -124,9 +122,7 @@ function Wrapper() {
   return <StrictMode>
     <BlueprintProvider>
       <ConlangProvider
-        dictionary={Dictionary}
         transformDictionary={transformDictionary}
-        config={LangConfig}
         transformConfig={transformConfig}
         api={API}
         error={toastErrorHandler}

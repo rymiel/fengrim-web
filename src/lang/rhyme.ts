@@ -1,7 +1,5 @@
+import { Dictionary, LangConfig } from "conlang-web-components";
 import { useContext } from "react";
-
-import { Dictionary } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 
 import { Syllable, syllableToIPA } from "./word";
 

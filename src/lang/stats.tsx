@@ -1,11 +1,9 @@
 import { Dialog, DialogBody, H4, HTMLTable, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
+import { Dictionary, FullEntry, LangConfig, SlotValues, SyllableSlot } from "conlang-web-components";
 import React, { FC, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { PartsContent, SyllableContent } from "common/stats";
-import { SlotValues, SyllableSlot } from "common/types";
-import { Dictionary, FullEntry } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 
 import {
   invertRhymeMatch,

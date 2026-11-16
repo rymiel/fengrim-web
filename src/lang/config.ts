@@ -1,24 +1,23 @@
 import {
   ApiConfig,
   configOrEmpty,
-  DEFAULT_GENERATION,
-  DEFAULT_KEY_VALUE,
+  createTransformConfig,
   DEFAULT_SOUND_CHANGE,
-  GenerationInstance,
+  LanguageConfig,
   SoundChangeInstance,
 } from "conlang-web-components";
-
-import { LangConfigData } from "providers/langConfig";
 
 import { SyllableConfig, SyllableInstance, syllablesToIPA } from "./word";
 
 const DEFAULT_SYLLABLE: SyllableConfig = { consonant: [], initial: [], vowel: [], final: [], tones: [] };
 
-export interface LangConfigFields {
-  syllable: SyllableInstance;
+declare module "conlang-web-components" {
+  interface LangConfigFields {
+    syllable: SyllableInstance;
+  }
 }
 
-function languageConfig(config: ApiConfig) {
+function languageConfig(config: ApiConfig): LanguageConfig {
   const syllable = new SyllableInstance(configOrEmpty(config.syllable, DEFAULT_SYLLABLE));
   const soundChange = new SoundChangeInstance(
     configOrEmpty(config.sound_change, DEFAULT_SOUND_CHANGE),
@@ -30,12 +29,4 @@ function languageConfig(config: ApiConfig) {
   return { soundChange, syllable, script, hasScript };
 }
 
-export function transformConfig(config: ApiConfig): LangConfigData {
-  const generation = new GenerationInstance(configOrEmpty(config.generation, DEFAULT_GENERATION));
-  const abbreviations = configOrEmpty(config.abbr, DEFAULT_KEY_VALUE);
-  const parts = configOrEmpty(config.parts, DEFAULT_KEY_VALUE);
-  const lang = languageConfig(config);
-  const ipa = (sentence: string) => lang.soundChange.soundChangeSentence(sentence);
-
-  return { ...lang, generation, abbreviations, parts, ipa, config };
-}
+export const transformConfig = createTransformConfig(languageConfig);

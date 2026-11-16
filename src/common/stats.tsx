@@ -1,9 +1,7 @@
 import { Dialog, DialogBody, H4, HTMLTable, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
+import { Dictionary, FullEntry, SlotValues, SyllableSlot } from "conlang-web-components";
 import { Fragment, useContext, useState } from "react";
 import { Link } from "react-router-dom";
-
-import { SlotValues, SyllableSlot } from "common/types";
-import { Dictionary, FullEntry } from "providers/dictionary";
 
 export function increment(m: Record<string, number>, k: string): Record<string, number> {
   m[k] = (m[k] ?? 0) + 1;

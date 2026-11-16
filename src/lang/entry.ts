@@ -1,5 +1,4 @@
-import { EditField, EntryStatus, GeneratedField, NewWordExtra } from "common/types";
-import { FullEntry } from "providers/dictionary";
+import { EditField, EntryStatus, FullEntry, GeneratedField, NewWordExtra } from "conlang-web-components";
 
 import { Part } from "./extra";
 

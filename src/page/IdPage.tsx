@@ -1,8 +1,7 @@
 import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
+import { Dictionary } from "conlang-web-components";
 import { useContext } from "react";
 import { Navigate, useParams } from "react-router-dom";
-
-import { Dictionary } from "providers/dictionary";
 
 export default function IdPage() {
   const { entries } = useContext(Dictionary);

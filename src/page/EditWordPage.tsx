@@ -17,7 +17,11 @@ import {
   ApiBase,
   ApiSection,
   BaseData,
+  Dictionary,
   EditWordPageContent,
+  FullEntry,
+  FullMeaning,
+  FullSection,
   InfoSection,
   InfoTag,
   RichText,
@@ -33,7 +37,6 @@ import { useParams } from "react-router-dom";
 
 import { SectionTitle, SIMPLE_SECTIONS } from "common/sections";
 import { EXTRA_EDIT_FIELDS, generatedFields } from "lang/entry";
-import { Dictionary, FullEntry, FullMeaning, FullSection } from "providers/dictionary";
 import { API, LANGUAGE } from "api";
 
 function EntryData({ v }: { v: FullEntry }) {

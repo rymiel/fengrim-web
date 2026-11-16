@@ -1,12 +1,10 @@
 import { Button, ControlGroup, HTMLSelect, InputGroup, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { ApiMeaning, ApiWord, uri, useTitle } from "conlang-web-components";
+import { ApiMeaning, ApiWord, Dictionary, LangConfig, LangConfigData, uri, useTitle } from "conlang-web-components";
 import { useContext, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { partName } from "common/display";
 import { draftClass, useNewWordExtra } from "lang/entry";
-import { Dictionary } from "providers/dictionary";
-import { LangConfig, LangConfigData } from "providers/langConfig";
 import { API, LANGUAGE } from "api";
 
 function Editor({ lang }: { lang: LangConfigData }) {

@@ -1,9 +1,6 @@
 import { NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import { ConfigPage as Content, useTitle } from "conlang-web-components";
+import { ConfigPage as Content, Dictionary, LangConfig, useTitle } from "conlang-web-components";
 import { useContext } from "react";
-
-import { Dictionary } from "providers/dictionary";
-import { LangConfig } from "providers/langConfig";
 
 export default function ConfigPage() {
   const { refresh } = useContext(Dictionary);

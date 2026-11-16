@@ -8,11 +8,10 @@ import {
   SpinnerSize,
   Tag,
 } from "@blueprintjs/core";
-import { GenerationInstance, SoundChangeInstance, useErrorHandler, useTitle } from "conlang-web-components";
+import { GenerationInstance, LangConfig, SoundChangeInstance, useErrorHandler, useTitle } from "conlang-web-components";
 import { useContext, useEffect, useState } from "react";
 
 import { validate } from "common/validation";
-import { LangConfig } from "providers/langConfig";
 
 function Content({ soundChange, generation }: { soundChange: SoundChangeInstance; generation: GenerationInstance }) {
   const error = useErrorHandler();
