@@ -11,7 +11,7 @@
     "paths": {
       "*": ["./src/*"]
     },
-    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "types": ["vite/client"],
     "noErrorTruncation": true
   },
   "include": ["./src/**/*", "./test/**/*"],
