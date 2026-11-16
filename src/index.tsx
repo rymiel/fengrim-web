@@ -2,7 +2,6 @@ import { renderSite } from "conlang-web-components";
 
 import { SITE } from "site";
 
-import "@blueprintjs/core/lib/css/blueprint.css";
 import "conlang-web-components/src/style.css";
 import "./style/lang.css";
 

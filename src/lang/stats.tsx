@@ -78,8 +78,8 @@ function RhymeDialog({ match, close }: { match: RhymeMatch | null; close: () => 
 }
 
 function RhymeCell({ className, value, onClick }: { className?: string; value: number; onClick: () => void }) {
-  const set = value == 0 ? "unset" : "set";
-  return <td className={`${className} ${set}`}>{value == 0 ? "-" : <a onClick={() => onClick()}>{value}</a>}</td>;
+  const empty = value == 0 ? "rhyme-empty" : "";
+  return <td className={`${className} ${empty}`}>{value == 0 ? "-" : <a onClick={() => onClick()}>{value}</a>}</td>;
 }
 
 type Table = Record<string, Record<string, Record<string, number>>>;
@@ -122,7 +122,7 @@ function RhymeBase({ body: Body, title, init }: RhymeBaseProps) {
     init(table, r);
   }
 
-  return <div className="stats rhyme">
+  return <div className="stats-section stats-rhyme">
     <div>
       <H4>{title}</H4>
       <Body table={table} vowels={vowels} tones={tones} finals={finals} popup={setMatch} />
@@ -135,21 +135,21 @@ const DefaultRhymeBody: RhymeBody = ({ vowels, finals, tones, table, popup }: Rh
   return <HTMLTable compact striped>
     <thead>
       <tr>
-        <th colSpan={2} className="br"></th>
+        <th colSpan={2} className="rhyme-divider"></th>
         {finals.map((f) => <th key={f}>-{f}</th>)}
       </tr>
     </thead>
     <tbody>
       {vowels.map((v) =>
         tones.map((t, ti) => {
-          const bb = ti == tones.length - 1 ? "bb" : "";
+          const groupEnd = ti == tones.length - 1 ? "rhyme-group-end" : "";
           return <tr key={`${v}-${t}`}>
-            {ti == 0 && <th className="bb" rowSpan={tones.length}>
+            {ti == 0 && <th className="rhyme-group-end" rowSpan={tones.length}>
               {v}
             </th>}
-            <th className={`br ${bb}`}>{t}</th>
+            <th className={`rhyme-divider ${groupEnd}`}>{t}</th>
             {finals.map((f) => <RhymeCell
-              className={bb}
+              className={groupEnd}
               key={f}
               value={table[v][t][f]}
               onClick={() => popup({ vowel: v, tone: t, final: f })}
