@@ -98,11 +98,7 @@ function AffixTreeNode({ node: { original, cut, affix, children } }: { node: Aff
   </>;
 }
 
-function calculateFormsCount(entries: readonly FullEntry[] | null, affixes: readonly Affix[] | null) {
-  if (entries === null || affixes === null) {
-    return "...";
-  }
-
+function calculateFormsCount(entries: readonly FullEntry[], affixes: readonly Affix[]) {
   let nouns = 0;
   let verbs = 0;
   let adjs = 0;
@@ -134,10 +130,9 @@ function calculateFormsCount(entries: readonly FullEntry[] | null, affixes: read
   return `${entries.length} lemmas, ${estimate} forms estimated`;
 }
 
-export function useReverseLookup(entries: readonly FullEntry[] | null): ReverseLookup {
-  const affixes = useAffixes(entries ?? []);
+export function useReverseLookup(entries: readonly FullEntry[]): ReverseLookup {
+  const affixes = useAffixes(entries);
   const lookup = useMemo(() => {
-    if (entries === null) return null;
     const tree = makeLookup(entries, affixes);
     return (query: string): ReverseResult => {
       const { terminal, affix } = tree(query);

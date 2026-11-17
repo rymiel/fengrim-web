@@ -1,14 +1,6 @@
-import { Dialog, DialogBody, H4, HTMLTable, NonIdealState, Spinner, SpinnerSize } from "@blueprintjs/core";
-import {
-  Dictionary,
-  FullEntry,
-  LangConfig,
-  PartsContent,
-  SlotValues,
-  SyllableContent,
-  SyllableSlot,
-} from "conlang-web-components";
-import React, { FC, useContext, useState } from "react";
+import { Dialog, DialogBody, H4, HTMLTable } from "@blueprintjs/core";
+import { FullEntry, PartsContent, SlotValues, SyllableContent, SyllableSlot, useData } from "conlang-web-components";
+import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -26,9 +18,7 @@ function slotMatchName(match: Partial<SlotValues>): string {
 }
 
 function SyllableSection() {
-  const config = useContext(LangConfig);
-
-  if (!config) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
+  const { config } = useData();
 
   const data = config.syllable.config;
   const slots: readonly SyllableSlot[] = [
@@ -44,10 +34,9 @@ function SyllableSection() {
 }
 
 function RhymeDialog({ match, close }: { match: RhymeMatch | null; close: () => void }) {
-  const entries = useContext(Dictionary).entries ?? [];
-  const config = useContext(LangConfig);
+  const { entries, config } = useData();
 
-  if (match === null || config === null) return null;
+  if (match === null) return null;
 
   const map = new Map<string, FullEntry[]>();
   for (const entry of entries) {
@@ -97,11 +86,9 @@ interface RhymeBaseProps {
   init: (table: Table, rhyme: Rhyme) => void;
 }
 function RhymeBase({ body: Body, title, init }: RhymeBaseProps) {
-  const config = useContext(LangConfig);
+  const { config } = useData();
   const rhymes = useRhymes();
   const [match, setMatch] = useState<RhymeMatch | null>(null);
-
-  if (!rhymes || !config) return <NonIdealState icon={<Spinner size={SpinnerSize.LARGE} />} />;
 
   const data = config.syllable.config;
   const vowels = data.vowel.map((i) => i[1]);

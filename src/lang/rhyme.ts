@@ -1,5 +1,4 @@
-import { Dictionary, LangConfig } from "conlang-web-components";
-import { useContext } from "react";
+import { useData } from "conlang-web-components";
 
 import { Syllable, syllableToIPA } from "./word";
 
@@ -18,11 +17,8 @@ export function syllableToRhyme(syll: Syllable): Rhyme {
   return { initial, vowel, tone, final } as const;
 }
 
-export function useRhymes(): Rhyme[] | null {
-  const { entries } = useContext(Dictionary);
-  const config = useContext(LangConfig);
-
-  if (!entries || !config) return null;
+export function useRhymes(): Rhyme[] {
+  const { entries, config } = useData();
 
   const map = new Map<string, Syllable>();
   for (const entry of entries) {
