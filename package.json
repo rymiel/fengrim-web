@@ -36,8 +36,5 @@
     "vite": "^8.3.5"
   },
   "author": "Emilia Kond",
-  "license": "UNLICENSED",
-  "allowScripts": {
-    "gitlab:rymiel/conlang-web-components": true
-  }
+  "license": "UNLICENSED"
 }
