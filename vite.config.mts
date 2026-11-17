@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   define: {
     WEB_VERSION: JSON.stringify(pkg.version),
-    CWC_VERSION: JSON.stringify(lock.packages["node_modules/conlang-web-components"].version),
+    CWC_VERSION: JSON.stringify(lock.packages["node_modules/@rymiel/conlang-web-components"].version),
   },
   server: { port: 3002, strictPort: true, host: true },
   build: { outDir: "../build", emptyOutDir: true, assetsDir: "static" },

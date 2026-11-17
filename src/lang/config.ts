@@ -4,13 +4,13 @@ import {
   DEFAULT_SOUND_CHANGE,
   LanguageConfig,
   SoundChangeInstance,
-} from "conlang-web-components";
+} from "@rymiel/conlang-web-components";
 
 import { SyllableConfig, SyllableInstance, syllablesToIPA } from "./word";
 
 const DEFAULT_SYLLABLE: SyllableConfig = { consonant: [], initial: [], vowel: [], final: [], tones: [] };
 
-declare module "conlang-web-components" {
+declare module "@rymiel/conlang-web-components" {
   interface LangConfigFields {
     syllable: SyllableInstance;
   }

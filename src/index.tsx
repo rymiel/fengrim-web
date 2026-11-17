@@ -1,8 +1,8 @@
-import { renderSite } from "conlang-web-components";
+import { renderSite } from "@rymiel/conlang-web-components";
 
 import { SITE } from "site";
 
-import "conlang-web-components/src/style.css";
+import "@rymiel/conlang-web-components/src/style.css";
 import "./style/lang.css";
 
 declare const WEB_VERSION: string;

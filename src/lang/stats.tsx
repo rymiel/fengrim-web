@@ -1,5 +1,12 @@
 import { Dialog, DialogBody, H4, HTMLTable } from "@blueprintjs/core";
-import { FullEntry, PartsContent, SlotValues, SyllableContent, SyllableSlot, useData } from "conlang-web-components";
+import {
+  FullEntry,
+  PartsContent,
+  SlotValues,
+  SyllableContent,
+  SyllableSlot,
+  useData,
+} from "@rymiel/conlang-web-components";
 import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
 

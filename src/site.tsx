@@ -1,4 +1,4 @@
-import { createApiClient, defineSite } from "conlang-web-components";
+import { createApiClient, defineSite } from "@rymiel/conlang-web-components";
 
 import { languageConfig } from "lang/config";
 import { deriveFields } from "lang/dictionary";

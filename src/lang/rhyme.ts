@@ -1,4 +1,4 @@
-import { useData } from "conlang-web-components";
+import { useData } from "@rymiel/conlang-web-components";
 
 import { Syllable, syllableToIPA } from "./word";
 

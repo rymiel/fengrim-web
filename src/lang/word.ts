@@ -1,4 +1,4 @@
-import { phraseConvert, sentenceConvert } from "conlang-web-components";
+import { phraseConvert, sentenceConvert } from "@rymiel/conlang-web-components";
 
 type IPAMapping = readonly [roman: string, ipa: string];
 type Tone = readonly [diacritic: string, letter: string, ipa: string];

@@ -1,8 +1,8 @@
-import { ApiWord, DerivedFields, LangConfigData } from "conlang-web-components";
+import { ApiWord, DerivedFields, LangConfigData } from "@rymiel/conlang-web-components";
 
 import { Part, partOfExtra } from "./extra";
 
-declare module "conlang-web-components" {
+declare module "@rymiel/conlang-web-components" {
   interface LangEntryFields {
     part: Part | null;
     phon: string;

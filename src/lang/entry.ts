@@ -1,4 +1,4 @@
-import { FullEntry, GeneratedField } from "conlang-web-components";
+import { FullEntry, GeneratedField } from "@rymiel/conlang-web-components";
 
 import { Part } from "./extra";
 
