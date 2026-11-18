@@ -1,6 +1,6 @@
 {
   "name": "fengrim-web",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "description": "",
   "main": "index.js",
@@ -14,9 +14,9 @@
   "dependencies": {
     "@blueprintjs/core": "^6.23.0",
     "@blueprintjs/select": "^6.4.2",
+    "@rymiel/conlang-web-components": "3.1.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@rymiel/conlang-web-components": "3.0.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
