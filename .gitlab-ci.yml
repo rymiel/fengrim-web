@@ -1,0 +1,17 @@
+deploy:
+  rules:
+    - if: $FORWARD_JOB_ID
+  script:
+    - echo "Running deploy"
+    - echo "project 89199650 job $FORWARD_JOB_ID"
+    - |
+      curl --request GET \
+        --location \
+        --url "https://gitlab.com/api/v4/projects/89199650/jobs/$FORWARD_JOB_ID/artifacts/fengrim.tar.gz" \
+        --output page.tar.gz
+    - mkdir public
+    - tar -xzf page.tar.gz -C public
+  artifacts:
+    paths:
+      - public/
+  pages: true
